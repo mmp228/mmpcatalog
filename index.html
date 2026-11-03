@@ -90,6 +90,17 @@ html{scroll-behavior:smooth}body{margin:0}
 .hero[hidden],.pads[hidden]{display:none}
 .item .n{min-width:0}
 
+
+.modal{position:fixed;inset:0;z-index:50;background:rgba(22,22,22,.88);display:flex;align-items:center;justify-content:center;padding:clamp(10px,3vw,32px)}
+.modal[hidden]{display:none}
+.mbox{width:min(1100px,100%);display:grid;gap:10px}
+.mbar{display:flex;justify-content:space-between;align-items:center;gap:12px;color:#f2f2ef;font-family:var(--mono);font-size:13px}
+.mbar b{font-family:var(--sans);font-size:18px;font-weight:800;letter-spacing:-.01em}
+.mbar a{border:1px solid #77776f;border-radius:999px;padding:6px 12px;color:#f2f2ef}
+.mx{font-family:var(--mono);font-weight:700;font-size:14px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:10px 16px;cursor:pointer;box-shadow:0 3px 0 #a83300}
+.mx:active{transform:translateY(3px);box-shadow:none}
+.mv{aspect-ratio:16/9;background:#000;border-radius:6px;overflow:hidden}
+.mv iframe,.mv video{width:100%;height:100%;border:0;display:block}
 </style></head>
 <body>
 <div class="wrap">
@@ -116,6 +127,12 @@ html{scroll-behavior:smooth}body{margin:0}
  </section>
  <footer class="mono"><span>MMP catalog</span><span>Астана</span></footer>
 </div>
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-label="Плеер">
+ <div class="mbox">
+  <div class="mbar"><b id="mTitle"></b><span style="display:flex;gap:8px;align-items:center"><a id="mOpen" target="_blank" rel="noopener">в новой вкладке</a><button class="mx" id="mClose" type="button">Закрыть</button></span></div>
+  <div class="mv" id="mv"></div>
+ </div>
+</div>
 <script>
 var CATS={news:'Новости',clips:'Клипы',vystup:'Выступления',zakadrom:'За кадром'};
 var ITEMS=[],STATE='load';
@@ -133,9 +150,31 @@ function route(){
  var rows=ITEMS.filter(function(i){return !cat||i.cat===cat});
  $('lTitle').textContent=cat?CATS[cat]:'Новинки';
  $('lCount').textContent=STATE==='ok'?rows.length+' шт.':'';
- $('list').innerHTML=STATE==='load'?'<p class="empty">Загрузка...</p>':STATE==='err'?'<p class="empty">Не удалось загрузить каталог. Обновите страницу.</p>':rows.length?rows.map(function(i){return '<a class="item" href="'+esc(i.u)+'" target="_blank" rel="noopener"><span class="n">'+esc(i.n)+'</span><span class="t">'+esc(i.t)+'</span><span class="c">'+CATS[i.cat]+'</span><span class="go">смотреть</span></a>'}).join(''):'<p class="empty">В этом разделе пока ничего нет.</p>';
+ $('list').innerHTML=STATE==='load'?'<p class="empty">Загрузка...</p>':STATE==='err'?'<p class="empty">Не удалось загрузить каталог. Обновите страницу.</p>':rows.length?rows.map(function(i){return '<a class="item" data-i="'+ITEMS.indexOf(i)+'" href="'+esc(i.u)+'" target="_blank" rel="noopener"><span class="n">'+esc(i.n)+'</span><span class="t">'+esc(i.t)+'</span><span class="c">'+CATS[i.cat]+'</span><span class="go">&#9654; смотреть</span></a>'}).join(''):'<p class="empty">В этом разделе пока ничего нет.</p>';
  document.title=(cat?CATS[cat]+' · ':'')+'MMP catalog';
 }
+
+function embed(u){
+ var m;
+ if(m=u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/))return{t:'f',s:'https://www.youtube-nocookie.com/embed/'+m[1]+'?autoplay=1&rel=0'};
+ if(m=u.match(/vimeo\.com\/(?:video\/)?(\d+)/))return{t:'f',s:'https://player.vimeo.com/video/'+m[1]+'?autoplay=1'};
+ if(m=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/))return{t:'f',s:'https://drive.google.com/file/d/'+m[1]+'/preview'};
+ if(/\.(mp4|webm|mov)(\?|$)/i.test(u))return{t:'v',s:u};
+ return null;
+}
+function openPlayer(i){
+ var x=ITEMS[i],e=x&&embed(x.u);
+ if(!e){window.open(x.u,'_blank','noopener');return}
+ $('mTitle').textContent=x.t;$('mOpen').href=x.u;
+ $('mv').innerHTML=e.t==='v'?'<video src="'+esc(e.s)+'" controls autoplay playsinline></video>':'<iframe src="'+esc(e.s)+'" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
+ $('modal').hidden=false;document.body.style.overflow='hidden';$('mClose').focus();
+}
+function closePlayer(){$('modal').hidden=true;$('mv').innerHTML='';document.body.style.overflow=''}
+$('mClose').onclick=closePlayer;
+$('modal').addEventListener('click',function(e){if(e.target===$('modal'))closePlayer()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('modal').hidden)closePlayer()});
+$('list').addEventListener('click',function(e){var a=e.target.closest('.item');if(!a||e.ctrlKey||e.metaKey)return;e.preventDefault();openPlayer(+a.dataset.i)});
+$('hBtn').addEventListener('click',function(e){if(e.ctrlKey||e.metaKey)return;e.preventDefault();openPlayer(0)});
 $('pads').innerHTML=Object.keys(CATS).map(function(k){return '<a class="pad" href="#'+k+'"><span>раздел</span><b>'+CATS[k]+'</b></a>'}).join('');
 window.addEventListener('hashchange',route);route();
 fetch('/api/items',{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){ITEMS=d;STATE='ok';hero();route()}).catch(function(){STATE='err';route()});

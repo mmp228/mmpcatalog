@@ -3,8 +3,8 @@ import { createHash, timingSafeEqual } from "node:crypto";
 
 const CATS = ["news", "clips", "vystup", "zakadrom"];
 const SEED = [
-  { n: "07", t: "Выпуск 7", cat: "news", place: "Астана", u: "https://drive.google.com/file/d/1uMoleuEO3nbqJZcc43FPqtDmtv07bUz7/view?usp=drive_link" },
-  { n: "01", t: "В мире животных", cat: "clips", place: "Астана", u: "https://drive.google.com/file/d/1uMoleuEO3nbqJZcc43FPqtDmtv07bUz7/view?usp=drive_link" }
+  { t: "Выпуск 7", cat: "news", u: "https://drive.google.com/file/d/1uMoleuEO3nbqJZcc43FPqtDmtv07bUz7/view?usp=drive_link" },
+  { t: "В мире животных", cat: "clips", u: "https://drive.google.com/file/d/1uMoleuEO3nbqJZcc43FPqtDmtv07bUz7/view?usp=drive_link" }
 ];
 
 const json = (d, s = 200) =>
@@ -27,10 +27,8 @@ function clean(list) {
     if (!/^https?:\/\//i.test(u)) throw new Error(`Строка ${row}: ссылка должна начинаться с http:// или https://`);
     if (!CATS.includes(x.cat)) throw new Error(`Строка ${row}: неизвестный раздел`);
     return {
-      n: String(x.n ?? "").trim().slice(0, 10),
       t: t.slice(0, 120),
       cat: x.cat,
-      place: String(x.place ?? "").trim().slice(0, 60),
       u: u.slice(0, 500)
     };
   });

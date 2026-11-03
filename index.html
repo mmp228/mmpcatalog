@@ -93,7 +93,7 @@ html{scroll-behavior:smooth}body{margin:0}
 
 .modal{position:fixed;inset:0;z-index:50;background:rgba(22,22,22,.88);display:flex;align-items:center;justify-content:center;padding:clamp(10px,3vw,32px)}
 .modal[hidden]{display:none}
-.mbox{width:min(1100px,100%);display:grid;gap:10px}
+.mbox{width:min(820px,100%,calc((100vh - 110px)*1.7778));width:min(820px,100%,calc((100dvh - 110px)*1.7778));min-width:min(100%,300px);display:grid;gap:10px}
 .mbar{display:flex;justify-content:space-between;align-items:center;gap:12px;color:#f2f2ef;font-family:var(--mono);font-size:13px}
 .mbar b{font-family:var(--sans);font-size:18px;font-weight:800;letter-spacing:-.01em}
 .mbar a{border:1px solid #77776f;border-radius:999px;padding:6px 12px;color:#f2f2ef}
@@ -158,6 +158,7 @@ function embed(u){
  var m;
  if(m=u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/))return{t:'f',s:'https://www.youtube-nocookie.com/embed/'+m[1]+'?autoplay=1&rel=0'};
  if(m=u.match(/vimeo\.com\/(?:video\/)?(\d+)/))return{t:'f',s:'https://player.vimeo.com/video/'+m[1]+'?autoplay=1'};
+ if(m=u.match(/kinescope\.io\/(?:embed\/|watch\/)?([A-Za-z0-9]{10,})/))return{t:'f',s:'https://kinescope.io/embed/'+m[1]};
  if(m=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/))return{t:'f',s:'https://drive.google.com/file/d/'+m[1]+'/preview'};
  if(/\.(mp4|webm|mov)(\?|$)/i.test(u))return{t:'v',s:u};
  return null;

@@ -41,7 +41,7 @@ input::placeholder{color:#5d5d57}
 .filters{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
 .chip{font-family:var(--mono);font-size:12px;border:1px solid var(--line);background:none;border-radius:999px;padding:5px 11px;cursor:pointer}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.vhead,.vrow{display:grid;grid-template-columns:1.5fr 1.2fr 160px 1.6fr 96px;gap:6px;align-items:center}
+.vhead,.vrow{display:grid;grid-template-columns:1.4fr 1.1fr 150px 1.3fr 1.2fr 96px;gap:6px;align-items:center}
 .vhead{font-family:var(--mono);font-size:11px;color:var(--mute);padding:0 6px 4px}
 .vrow{padding:6px;border:1px solid transparent;border-bottom-color:var(--line);border-radius:6px}
 .vrow:hover{background:var(--panel2)}
@@ -58,7 +58,7 @@ input::placeholder{color:#5d5d57}
  .main{grid-template-columns:1fr}
  .vhead{display:none}
  .vrow{grid-template-columns:1fr 1fr}
- .vrow>input:nth-child(1),.vrow>input:nth-child(4){grid-column:1/-1}
+ .vrow>input:nth-child(1),.vrow>input:nth-child(4),.vrow>input:nth-child(5){grid-column:1/-1}
  .vrow .ctl{grid-column:1/-1;justify-content:flex-start}
 }
 /* Навигашка */
@@ -118,7 +118,7 @@ input::placeholder{color:#5d5d57}
   <section class="box sec">
    <h2>Видео <button class="btn pri sm" id="addVid" type="button">+ Видео</button></h2>
    <div class="filters" id="filters"></div>
-   <div class="vhead"><span>Название</span><span>Подзаголовок</span><span>Категория</span><span>Ссылка</span><span></span></div>
+   <div class="vhead"><span>Название</span><span>Подзаголовок</span><span>Категория</span><span>Ссылка</span><span>Обложка</span><span></span></div>
    <div class="list" id="rows"></div>
    <p class="mono" id="hint" style="margin-top:8px"></p>
   </section>
@@ -183,6 +183,7 @@ function renderItems(){
    '<input data-k="sub" value="'+esc(x.sub||'')+'" placeholder="Например: 1 серия, 28 мин" maxlength="160">'+
    '<select data-k="cat">'+opts(x.cat)+'</select>'+
    '<input data-k="u" type="url" value="'+esc(x.u)+'" placeholder="https://">'+
+   '<input data-k="img" value="'+esc(x.img||'')+'" placeholder="необязательно: ссылка на картинку">'+
    '<span class="ctl"><button data-a="up"'+dis+' title="Выше">↑</button><button data-a="down"'+dis+' title="Ниже">↓</button><button data-a="del" title="Удалить">✕</button></span></div>';
  }).join(''):'<p class="mono empty">'+(items.length?'В этой категории пока нет видео':'Видео нет. Нажмите «+ Видео»')+'</p>';
  $('hint').textContent=filter?'Сейчас показана одна категория. Чтобы менять порядок, выберите «Все».':'';

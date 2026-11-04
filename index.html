@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0e0e0d;--panel:#171716;--panel2:#121211;--ink:#f2f2ef;--mute:#8d8d85;--line:#2a2a27;--acc:#ff4f00;--mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;--sans:'Onest','Helvetica Neue',Arial,sans-serif}
+:root{--bg:#0e0e0d;--panel:#171716;--panel2:#121211;--ink:#f2f2ef;--soft:#d6d6d0;--mute:#8d8d85;--line:#2a2a27;--acc:#ff4f00;--mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;--sans:'Onest','Helvetica Neue',Arial,sans-serif}
 *{box-sizing:border-box;margin:0;padding:0}
 html{color-scheme:dark;scroll-behavior:smooth}
 [hidden]{display:none!important}
@@ -26,69 +26,93 @@ button,input{font:inherit}
 .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;letter-spacing:-.01em}
 .dot{width:12px;height:12px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 4px rgba(255,79,0,.15);animation:blink 2s steps(2,end) infinite}
 @keyframes blink{50%{opacity:.35}}
-.tg{font-family:var(--mono);font-size:13px;border:1px solid var(--ink);border-radius:999px;padding:8px 16px;transition:background .15s,color .15s}
-.tg:hover{background:var(--ink);color:var(--bg)}
+.tg{font-family:var(--mono);font-size:13px;border:1px solid var(--soft);border-radius:999px;padding:8px 16px;transition:background .15s,color .15s}
+.tg:hover{background:var(--soft);color:var(--bg)}
 
-.hero{padding:clamp(22px,4vw,44px);display:grid;gap:18px}
+.hero{padding:clamp(20px,4vw,40px);display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,3vw,36px);align-items:stretch}
+.hl{display:grid;gap:18px;align-content:center}
 .kicker{font-family:var(--mono);font-size:12px;color:var(--acc);letter-spacing:.08em}
-.hero h1{font-size:clamp(40px,8vw,92px);line-height:.92;font-weight:800;letter-spacing:-.045em}
+.hero h1{font-size:clamp(40px,7vw,84px);line-height:.94;font-weight:800;letter-spacing:-.045em;color:var(--soft)}
 .q{width:min(420px,100%);font-size:15px;padding:12px 16px;border:1px solid var(--line);border-radius:999px;background:var(--bg);color:var(--ink)}
 .q::placeholder{color:var(--mute)}
 
-.feat{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:clamp(18px,3vw,28px);background:linear-gradient(120deg,#1d1d1b,#0b0b0a)}
-.feat .lbl{display:flex;gap:10px;align-items:center}
-.feat h2{font-size:clamp(24px,4vw,40px);font-weight:800;letter-spacing:-.02em;margin-top:8px;line-height:1.1}
-.btnp{font-family:var(--mono);font-weight:700;font-size:14px;background:var(--acc);color:#fff;border:0;border-radius:6px;padding:14px 22px;cursor:pointer;box-shadow:0 4px 0 #a83300;transition:transform .08s,box-shadow .08s}
-.btnp:hover{transform:translateY(2px);box-shadow:0 2px 0 #a83300}
-.btnp:active{transform:translateY(4px);box-shadow:none}
+.feat{position:relative;overflow:hidden;min-height:260px;border-radius:10px;border:1px solid var(--line);background:#1a1a18;display:flex;align-items:flex-end}
+.fbg{position:absolute;inset:0}
+.fbg img{width:100%;height:100%;object-fit:cover;opacity:.32;filter:saturate(.7)}
+.fbg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,14,13,.15),rgba(14,14,13,.9))}
+.fc{position:relative;padding:clamp(18px,3vw,26px);display:grid;gap:8px;width:100%}
+.lbl{display:flex;gap:9px;align-items:center;font-family:var(--mono);font-size:12px;color:var(--mute)}
+.fc .cat{font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.05em;text-transform:uppercase}
+.feat h2{font-size:clamp(22px,3vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.15;color:var(--soft)}
+.feat .sub{font-size:14px;color:var(--mute)}
+.btnp{justify-self:start;margin-top:6px;font-family:var(--mono);font-weight:700;font-size:13px;background:var(--soft);color:var(--bg);border:0;border-radius:6px;padding:12px 18px;cursor:pointer;transition:transform .08s,background .15s}
+.btnp:hover{background:#fff}
+.btnp:active{transform:translateY(2px)}
 .led{width:8px;height:8px;border-radius:50%;background:var(--acc);animation:blink 1.6s steps(2,end) infinite}
 
 .chips{display:flex;gap:6px;flex-wrap:wrap}
-.chip{font-family:var(--mono);font-size:13px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;transition:border-color .15s,background .15s}
-.chip:hover{border-color:var(--ink)}
-.chip[aria-current="page"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-
+.chip{font-family:var(--mono);font-size:13px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;color:var(--soft);transition:border-color .15s,background .15s}
+.chip:hover{border-color:var(--soft)}
+.chip[aria-current="page"]{background:var(--soft);color:var(--bg);border-color:var(--soft)}
 .head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:4px 2px}
-.head h2{font-size:20px;font-weight:800;letter-spacing:-.01em}
+.head h2{font-size:20px;font-weight:800;letter-spacing:-.01em;color:var(--soft)}
 
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
 .card{display:flex;flex-direction:column;background:var(--panel2);border:1px solid var(--line);border-radius:10px;overflow:hidden;transition:transform .15s,border-color .15s}
-.card:hover{transform:translateY(-3px);border-color:var(--acc)}
+.card:hover{transform:translateY(-3px);border-color:#4a4a45}
 .card:hover .play{background:var(--acc);color:#fff;border-color:var(--acc)}
-.art{aspect-ratio:16/9;display:grid;place-items:center;background:
+.art{position:relative;aspect-ratio:16/9;display:grid;place-items:center;overflow:hidden;background:
  repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 1px,transparent 1px 12px),
  linear-gradient(135deg,#222220,#0b0b0a)}
-.play{width:52px;height:52px;border-radius:50%;border:1px solid var(--mute);display:grid;place-items:center;font-size:16px;color:var(--ink);transition:background .15s,color .15s,border-color .15s;padding-left:3px}
-.body{padding:14px 16px 16px;display:grid;gap:6px}
-.cat{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:.04em;text-transform:uppercase}
+.art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.play{position:relative;width:48px;height:48px;border-radius:50%;background:rgba(14,14,13,.6);border:1px solid var(--mute);display:grid;place-items:center;font-size:15px;color:var(--ink);transition:background .15s,color .15s,border-color .15s;padding-left:3px}
+.body{padding:12px 14px 14px;display:grid;gap:5px}
+.body .cat{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:.04em;text-transform:uppercase}
 .title{font-size:16px;font-weight:700;line-height:1.3}
 .sub{font-size:13px;color:var(--mute);line-height:1.35}
 .empty{grid-column:1/-1;padding:28px 18px;text-align:center}
 
 footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:4px 2px}
 
-.modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;padding:clamp(10px,3vw,32px)}
-.mbox{width:min(820px,100%,calc((100vh - 110px)*1.7778));min-width:min(100%,300px);display:grid;gap:10px}
-.mbar{display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:var(--mono);font-size:13px}
-.mbar b{font-family:var(--sans);font-size:18px;font-weight:800}
-.mbar .r{display:flex;gap:8px;align-items:center}
-.mbar a{border:1px solid var(--mute);border-radius:999px;padding:6px 12px}
-.mx{font-family:var(--mono);font-weight:700;font-size:14px;background:var(--acc);color:#fff;border:0;border-radius:6px;padding:10px 16px;cursor:pointer;box-shadow:0 3px 0 #a83300}
-.mx:active{transform:translateY(3px);box-shadow:none}
-.mv{aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden}
-.mv iframe,.mv video{width:100%;height:100%;border:0;display:block}
-.mv.tg{aspect-ratio:auto;background:#fff;overflow:auto}
-.mv.tg iframe{height:min(560px,calc(100vh - 110px));min-height:360px}
-
-@media(max-width:720px){
- .feat{grid-template-columns:1fr}
+/* просмотр с плейлистом */
+.watch{position:fixed;inset:0;z-index:60;background:var(--bg);overflow:auto}
+.wbar{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;background:rgba(14,14,13,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.wt{min-width:0;display:grid;gap:2px}
+.wt b{font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wbtns{display:flex;gap:6px;flex:none;align-items:center}
+.b2{font-family:var(--mono);font-size:12px;border:1px solid var(--mute);border-radius:999px;padding:7px 12px;background:none;color:var(--ink);cursor:pointer;white-space:nowrap}
+.b2:hover{border-color:var(--ink)}
+.b2.pri{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:700}
+.wbody{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;padding:16px;max-width:1400px;margin:0 auto;align-items:start}
+.wv{aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden}
+.wv iframe,.wv video{width:100%;height:100%;border:0;display:block}
+.wv.tg{aspect-ratio:auto;background:#fff}
+.wv.tg iframe{height:min(600px,72vh);min-height:360px}
+.wmeta{margin-top:10px}
+.plist{display:grid;gap:2px;align-content:start;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px;max-height:calc(100vh - 110px);overflow:auto;position:sticky;top:70px}
+.pl-h{font-family:var(--mono);font-size:12px;color:var(--mute);padding:8px 8px 6px}
+.pli{display:grid;grid-template-columns:120px 1fr;gap:10px;padding:6px;border-radius:8px;cursor:pointer;align-items:center}
+.pli:hover{background:var(--panel2)}
+.pli[aria-current="true"]{background:#2a1c15;box-shadow:inset 3px 0 0 var(--acc)}
+.pli .th{position:relative;aspect-ratio:16/9;background:linear-gradient(135deg,#222220,#0b0b0a);border-radius:6px;overflow:hidden}
+.pli .th img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pt{font-size:13px;font-weight:700;line-height:1.3}
+.ps{display:block;font-size:12px;color:var(--mute);margin-top:3px}
+@media(max-width:900px){
+ .hero{grid-template-columns:1fr}
+ .feat{min-height:220px}
+ .wbody{grid-template-columns:1fr;padding:10px;gap:12px}
+ .plist{position:static;max-height:none}
+ .wbar .b2:not(.pri){display:none}
+}
+@media(max-width:560px){
  .grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
- .play{width:42px;height:42px}
+ .play{width:40px;height:40px}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
-
-.nv-char{position:fixed;left:14px;right:auto;bottom:14px;z-index:40;width:76px;height:76px;padding:0;border:0;background:none;cursor:pointer;animation:nvbob 3s ease-in-out infinite}
+/* Навигашка */
+.nv-char{position:fixed;left:14px;bottom:14px;z-index:70;width:76px;height:76px;padding:0;border:0;background:none;cursor:pointer;animation:nvbob 3s ease-in-out infinite}
 .nv-char:focus-visible{outline:3px solid var(--acc);outline-offset:4px;border-radius:50%}
 .nv-svg{width:76px;height:76px;overflow:visible;display:block}
 .nv-svg .nv-body,.nv-svg .nv-ant{fill:var(--acc)}
@@ -97,9 +121,9 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
 .nv-svg .nv-eye{fill:var(--acc);transform-box:fill-box;transform-origin:center;animation:nvblink 4s infinite}
 .nv-svg .nv-mouth{fill:#0e0e0d}
 .nv-char:hover .nv-body{fill:#ff6a2b}
-.nv-bub{position:fixed;left:14px;right:auto;bottom:100px;z-index:40;width:min(300px,calc(100vw - 28px));background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.nv-bub{position:fixed;left:14px;bottom:100px;z-index:70;width:min(300px,calc(100vw - 28px));background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
 .nv-bub[hidden]{display:none}
-.nv-bub::after{content:"";position:absolute;left:38px;right:auto;bottom:-7px;width:12px;height:12px;background:var(--panel);border-right:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg)}
+.nv-bub::after{content:"";position:absolute;left:38px;bottom:-7px;width:12px;height:12px;background:var(--panel);border-right:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg)}
 .nv-who{display:block;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--acc);letter-spacing:.06em;margin-bottom:6px}
 .nv-txt{font-size:14px;line-height:1.45;padding-right:20px}
 .nv-acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
@@ -121,70 +145,101 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
  </header>
 
  <section class="box hero">
-  <p class="kicker">MATVEY MONTAGE PRODUCTION</p>
-  <h1>Каталог<br>контента</h1>
-  <input class="q" id="q" type="search" placeholder="Поиск по названию" aria-label="Поиск по названию" autocomplete="off">
- </section>
-
- <section class="box feat" id="feat" hidden>
-  <div>
-   <div class="lbl"><span class="led"></span><span class="mono">новое</span></div>
-   <p class="cat" id="fCat" style="margin-top:14px"></p>
-   <h2 id="fTitle"></h2>
+  <div class="hl">
+   <p class="kicker">MATVEY MONTAGE PRODUCTION</p>
+   <h1>Каталог<br>контента</h1>
+   <input class="q" id="q" type="search" placeholder="Поиск по названию" aria-label="Поиск по названию" autocomplete="off">
   </div>
-  <button class="btnp" id="fBtn" type="button">▶ Смотреть</button>
+  <div class="feat" id="feat" hidden>
+   <div class="fbg" id="fbg"></div>
+   <div class="fc">
+    <div class="lbl"><span class="led"></span>новое</div>
+    <p class="cat" id="fCat"></p>
+    <h2 id="fTitle"></h2>
+    <p class="sub" id="fSub"></p>
+    <button class="btnp" id="fBtn" type="button">▶ Смотреть</button>
+   </div>
+  </div>
  </section>
 
  <nav class="chips" id="chips" aria-label="Категории"></nav>
-
  <div class="head"><h2 id="ttl">Все видео</h2><span class="mono" id="cnt"></span></div>
  <section class="grid" id="grid" aria-live="polite"></section>
 
  <footer class="mono"><span>MATVEY MONTAGE PRODUCTION</span><span>Каталог контента MMP</span></footer>
 </div>
 
-<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-label="Плеер">
- <div class="mbox">
-  <div class="mbar"><b id="mTitle"></b><span class="r"><a id="mOpen" target="_blank" rel="noopener">в новой вкладке</a><button class="mx" id="mClose" type="button">Закрыть</button></span></div>
-  <div class="mv" id="mv"></div>
+<div class="watch" id="watch" hidden role="dialog" aria-modal="true" aria-label="Просмотр">
+ <div class="wbar">
+  <div class="wt"><span class="mono" id="wCat"></span><b id="wTitle"></b></div>
+  <div class="wbtns">
+   <a class="b2" id="wOpen" target="_blank" rel="noopener">в новой вкладке</a>
+   <button class="b2 pri" id="wNext" type="button">Следующее ▶</button>
+   <button class="b2" id="wClose" type="button">Закрыть</button>
+  </div>
+ </div>
+ <div class="wbody">
+  <div><div class="wv" id="wv"></div><p class="sub wmeta" id="wSub"></p></div>
+  <aside class="plist" id="plist" aria-label="Плейлист"></aside>
  </div>
 </div>
 
+<button class="nv-char" id="nvChar" type="button" aria-expanded="false" aria-label="Навигашка: помощь по каталогу">
+ <svg class="nv-svg" viewBox="0 0 64 64" aria-hidden="true"><line class="nv-stick" x1="32" y1="9" x2="32" y2="15"/><circle class="nv-ant" cx="32" cy="6" r="4"/><rect class="nv-body" x="11" y="14" width="42" height="40" rx="11"/><rect class="nv-screen" x="19" y="24" width="26" height="17" rx="5"/><rect class="nv-eye" x="24" y="29" width="5" height="7" rx="1.5"/><rect class="nv-eye" x="35" y="29" width="5" height="7" rx="1.5"/><rect class="nv-mouth" x="27" y="46" width="10" height="3" rx="1.5"/></svg>
+</button>
+<div class="nv-bub" id="nvBub" hidden role="status">
+ <span class="nv-who">НАВИГАШКА</span>
+ <button class="nv-close" id="nvClose" type="button" aria-label="Закрыть">×</button>
+ <p class="nv-txt" id="nvTxt"></p>
+ <div class="nv-acts" id="nvActs"></div>
+</div>
+
 <script>
-var CATS=[],ITEMS=[],STATE='load';
+var CATS=[],ITEMS=[],STATE='load',PL=[],PI=0;
 var $=function(i){return document.getElementById(i)};
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function catName(k){var c=CATS.find(function(c){return c.k===k});return c?c.t:''}
 
+/* ссылки, обложки, встраивание */
+function ytId(u){var m=u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/);return m?m[1]:''}
+function driveId(u){var m=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/);return m?m[1]:''}
+function cover(it){
+ if(it.img)return it.img;
+ var y=ytId(it.u);if(y)return 'https://img.youtube.com/vi/'+y+'/hqdefault.jpg';
+ var d=driveId(it.u);if(d)return 'https://drive.google.com/thumbnail?id='+d+'&sz=w640';
+ return '';
+}
 function embed(u){
  var m;
- if(m=u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/))return{t:'f',s:'https://www.youtube-nocookie.com/embed/'+m[1]+'?autoplay=1&rel=0'};
- if(m=u.match(/vimeo\.com\/(?:video\/)?(\d+)/))return{t:'f',s:'https://player.vimeo.com/video/'+m[1]+'?autoplay=1'};
- if(m=u.match(/kinescope\.io\/(?:embed\/|watch\/)?([A-Za-z0-9]{10,})/))return{t:'f',s:'https://kinescope.io/embed/'+m[1]};
+ if(m=ytId(u))return{t:'f',yt:1,s:'https://www.youtube-nocookie.com/embed/'+m+'?autoplay=1&rel=0&enablejsapi=1'};
+ if(m=u.match(/vimeo\.com\/(?:video\/)?(\d+)/))return{t:'f',vim:1,s:'https://player.vimeo.com/video/'+m[1]+'?autoplay=1'};
+ if(m=u.match(/kinescope\.io\/(?:embed\/|watch\/)?([A-Za-z0-9]{10,})/))return{t:'f',kin:1,s:'https://kinescope.io/embed/'+m[1]+'?autoplay=1'};
  if(m=u.match(/^https?:\/\/t\.me\/([A-Za-z][A-Za-z0-9_]{3,})\/(\d+)/))return{t:'f',tg:1,s:'https://t.me/'+m[1]+'/'+m[2]+'?embed=1&mode=tme'};
- if(m=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/))return{t:'f',s:'https://drive.google.com/file/d/'+m[1]+'/preview'};
+ if(m=driveId(u))return{t:'f',s:'https://drive.google.com/file/d/'+m+'/preview'};
  if(/\.(mp4|webm|mov)(\?|$)/i.test(u))return{t:'v',s:u};
  return null;
 }
-function openPlayer(i){
- var x=ITEMS[i],e=x&&embed(x.u);
- if(!e){window.open(x.u,'_blank','noopener');return}
- $('mTitle').textContent=x.t+(x.sub?' — '+x.sub:'');$('mOpen').href=x.u;
- $('mv').className='mv'+(e.tg?' tg':'');
- $('mv').innerHTML=e.t==='v'?'<video src="'+esc(e.s)+'" controls autoplay playsinline></video>':'<iframe src="'+esc(e.s)+'" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
- $('modal').hidden=false;document.body.style.overflow='hidden';$('mClose').focus();
-}
-function closePlayer(){$('modal').hidden=true;$('mv').innerHTML='';$('mv').className='mv';document.body.style.overflow=''}
-$('mClose').onclick=closePlayer;
-$('modal').addEventListener('click',function(e){if(e.target===$('modal'))closePlayer()});
-document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('modal').hidden)closePlayer()});
+function isAuto(e){return !!e&&!!(e.yt||e.vim||e.kin||e.t==='v')}
+function isTg(u){return /^https?:\/\/t\.me\//i.test(u||'')}
 
+/* главная */
+function card(i){
+ var it=ITEMS[i],c=cover(it);
+ return '<a class="card" href="'+esc(it.u)+'" data-i="'+i+'" target="_blank" rel="noopener"><span class="art">'+
+  (c?'<img src="'+esc(c)+'" alt="" loading="lazy" onerror="this.remove()">':'')+
+  '<span class="play">▶</span></span><span class="body"><span class="cat">'+esc(catName(it.cat))+'</span><span class="title">'+esc(it.t)+'</span>'+
+  (it.sub?'<span class="sub">'+esc(it.sub)+'</span>':'')+'</span></a>';
+}
 function render(){
  var key=location.hash.slice(1),cur=CATS.find(function(c){return c.k===key}),q=$('q').value.trim().toLowerCase();
  $('chips').innerHTML='<a class="chip" href="#"'+(cur?'':' aria-current="page"')+'>Все</a>'+CATS.map(function(c){return '<a class="chip" href="#'+esc(c.k)+'"'+(cur&&cur.k===c.k?' aria-current="page"':'')+'>'+esc(c.t)+'</a>'}).join('');
  var showFeat=STATE==='ok'&&!cur&&!q&&ITEMS.length>0;
  $('feat').hidden=!showFeat;
- if(showFeat){$('fCat').textContent=catName(ITEMS[0].cat);$('fTitle').textContent=ITEMS[0].t}
+ if(showFeat){
+  var f=ITEMS[0],c=cover(f);
+  $('fCat').textContent=catName(f.cat);$('fTitle').textContent=f.t;$('fSub').textContent=f.sub||'';
+  $('fbg').innerHTML=c?'<img src="'+esc(c)+'" alt="" onerror="this.remove()">':'';
+ }
  var rows=[];
  ITEMS.forEach(function(it,i){
   if(showFeat&&i===0)return;
@@ -192,59 +247,108 @@ function render(){
  });
  $('ttl').textContent=cur?cur.t:(q?'Результаты поиска':'Все видео');
  $('cnt').textContent=STATE==='ok'?rows.length+' шт.':'';
- $('grid').innerHTML=STATE==='load'?'<p class="empty mono">Загрузка...</p>':STATE==='err'?'<p class="empty mono">Не удалось загрузить каталог. Обновите страницу.</p>':rows.length?rows.map(function(i){var it=ITEMS[i];return '<a class="card" href="'+esc(it.u)+'" data-i="'+i+'" target="_blank" rel="noopener"><span class="art"><span class="play">▶</span></span><span class="body"><span class="cat">'+esc(catName(it.cat))+'</span><span class="title">'+esc(it.t)+'</span>'+(it.sub?'<span class="sub">'+esc(it.sub)+'</span>':'')+'</span></a>'}).join(''):(q?nvEmpty(q):'<p class="empty mono">В этом разделе пока пусто.</p>');
+ $('grid').innerHTML=STATE==='load'?'<p class="empty mono">Загрузка...</p>':STATE==='err'?'<p class="empty mono">Не удалось загрузить каталог. Обновите страницу.</p>':
+  rows.length?rows.map(card).join(''):(q?nvEmpty(q):'<p class="empty mono">В этом разделе пока пусто.</p>');
  document.title=(cur?cur.t+' · ':'')+'Каталог контента MMP';
 }
-$('grid').addEventListener('click',function(e){if(e.target.closest('[data-nv="clear"]')){$('q').value='';render();return}var a=e.target.closest('.card');if(!a||e.ctrlKey||e.metaKey)return;e.preventDefault();handleOpen(+a.dataset.i)});
+
+/* просмотр с плейлистом */
+function openWatch(i){
+ var it=ITEMS[i];if(!it)return;
+ PL=ITEMS.filter(function(x){return x.cat===it.cat});
+ PI=PL.indexOf(it);
+ $('wCat').textContent=catName(it.cat)+' · '+PL.length+' видео';
+ nvHide();
+ $('watch').hidden=false;document.body.style.overflow='hidden';
+ playCur();
+ $('wClose').focus();
+}
+function closeWatch(){$('watch').hidden=true;$('wv').innerHTML='';PL=[];document.body.style.overflow=''}
+function playCur(){
+ var it=PL[PI],e=embed(it.u);
+ $('wTitle').textContent=it.t;$('wSub').textContent=it.sub||'';$('wOpen').href=it.u;
+ $('wNext').disabled=PI>=PL.length-1;
+ renderPL();
+ if(!e){window.open(it.u,'_blank','noopener');return}
+ var mv=$('wv');
+ mv.className='wv'+(e.tg?' tg':'');
+ mv.innerHTML=e.t==='v'?'<video src="'+esc(e.s)+'" controls autoplay playsinline></video>':'<iframe id="wf" src="'+esc(e.s)+'" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
+ if(e.t==='v')mv.querySelector('video').onended=next;
+ if(e.yt)$('wf').onload=function(){this.contentWindow.postMessage(JSON.stringify({event:'listening'}),'*')};
+ if(!isAuto(e))nvShow('Это видео не переключается само и не запускается автоматически. Нажмите ▶ в плеере. Автопереход работает для YouTube, Vimeo, Kinescope и mp4.',[{label:'Понятно',fn:nvHide}]);
+}
+function next(){
+ if(PI<PL.length-1){PI++;playCur();return}
+ nvShow('Плейлист закончился. Выберите видео из списка справа или закройте плеер.',[{label:'Закрыть',fn:closeWatch}]);
+}
+function renderPL(){
+ $('plist').innerHTML='<div class="pl-h">'+esc(catName(PL[0]?PL[0].cat:''))+' · '+PL.length+' видео</div>'+PL.map(function(x,k){
+  var c=cover(x);
+  return '<div class="pli" role="button" tabindex="0" data-k="'+k+'" aria-current="'+(k===PI?'true':'false')+'"><span class="th">'+(c?'<img src="'+esc(c)+'" alt="" loading="lazy" onerror="this.remove()">':'')+'</span><span><span class="pt">'+esc(x.t)+'</span>'+(x.sub?'<span class="ps">'+esc(x.sub)+'</span>':'')+(isTg(x.u)?'<span class="ps">из Telegram</span>':'')+'</span></div>';
+ }).join('');
+}
+$('plist').addEventListener('click',function(e){var r=e.target.closest('.pli');if(!r)return;PI=+r.dataset.k;playCur()});
+$('plist').addEventListener('keydown',function(e){if(e.key!=='Enter')return;var r=e.target.closest('.pli');if(!r)return;PI=+r.dataset.k;playCur()});
+$('wNext').onclick=next;
+$('wClose').onclick=closeWatch;
+window.addEventListener('message',function(e){
+ if(!/youtube/.test(e.origin)||typeof e.data!=='string')return;
+ try{var d=JSON.parse(e.data);if(d.event==='infoDelivery'&&d.info&&d.info.playerState===0&&!$('watch').hidden)next()}catch(_){}
+});
+
+/* навигация по событиям */
+function handleOpen(i){var it=ITEMS[i];if(!it)return;if(isTg(it.u))telegramPrompt(i);else openWatch(i)}
+$('grid').addEventListener('click',function(e){
+ if(e.target.closest('[data-nv="clear"]')){$('q').value='';render();return}
+ var a=e.target.closest('.card');if(!a||e.ctrlKey||e.metaKey)return;
+ e.preventDefault();handleOpen(+a.dataset.i);
+});
 $('fBtn').onclick=function(){handleOpen(0)};
 $('q').addEventListener('input',render);
 window.addEventListener('hashchange',render);
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){if(!$('watch').hidden)closeWatch();else if(!$('nvBub').hidden)nvHide()}});
+
+/* Навигашка */
+var nvTimer=null;
+function nvShow(t,list){
+ clearTimeout(nvTimer);
+ $('nvTxt').textContent=t;
+ var acts=$('nvActs');acts.innerHTML='';
+ (list||[]).forEach(function(x){var b=document.createElement('button');b.type='button';b.className='nv-btn';b.textContent=x.label;b.onclick=x.fn;acts.appendChild(b)});
+ $('nvBub').hidden=false;$('nvChar').setAttribute('aria-expanded','true');
+}
+function nvHide(){clearTimeout(nvTimer);$('nvBub').hidden=true;$('nvChar').setAttribute('aria-expanded','false')}
+function nvBack(){return {label:'Назад',fn:nvMenu}}
+function nvMenu(){nvShow('Привет! Я Навигашка. Помогу найти видео, подскажу разделы и объясню, как смотреть.',[
+ {label:'Найти видео',fn:nvFind},{label:'Разделы',fn:nvSections},{label:'Что нового?',fn:nvFresh},{label:'Как смотреть?',fn:nvHow}])}
+function nvFind(){nvShow('Введите название в поле поиска над каталогом.',[nvBack()]);$('q').focus()}
+function nvSections(){
+ var a=[{label:'Все видео',fn:function(){location.hash='';nvShow('Открыл все видео.',[nvBack()])}}];
+ CATS.forEach(function(c){a.push({label:c.t,fn:function(){location.hash=c.k;nvShow('Открыл раздел «'+c.t+'».',[nvBack()])}})});
+ a.push(nvBack());nvShow('Вот разделы:',a);
+}
+function nvFresh(){
+ if(!ITEMS.length){nvShow('Пока в каталоге ничего нет.',[nvBack()]);return}
+ nvShow('Последнее добавленное: «'+ITEMS[0].t+'» ('+catName(ITEMS[0].cat)+').',[{label:'Смотреть',fn:function(){handleOpen(0)}},nvBack()]);
+}
+function nvHow(){nvShow('Видео с YouTube, Vimeo, Kinescope, mp4 и Google Drive открываются прямо на сайте. Видео из Telegram часто показываются не полностью, поэтому для них я предложу смотреть на сайте или открыть пост в Telegram. Каждая категория работает как плейлист: переход к следующему видео идёт сам, если видео поддерживает это.',[nvBack()])}
+function telegramPrompt(i){
+ var it=ITEMS[i];
+ nvShow('«'+it.t+'» — это видео из Telegram. Встроенный плеер там часто не показывает ролик целиком, поэтому смотреть здесь может быть неудобно. Что выберете?',[
+  {label:'Смотреть на сайте',fn:function(){openWatch(i)}},
+  {label:'Открыть в Telegram',fn:function(){window.open(it.u,'_blank','noopener')}}]);
+}
+function nvEmpty(q){
+ return '<div class="empty nv-empty"><svg class="nv-svg" viewBox="0 0 64 64" aria-hidden="true"><line class="nv-stick" x1="32" y1="9" x2="32" y2="15"/><circle class="nv-ant" cx="32" cy="6" r="4"/><rect class="nv-body" x="11" y="14" width="42" height="40" rx="11"/><rect class="nv-screen" x="19" y="24" width="26" height="17" rx="5"/><rect class="nv-eye" x="24" y="29" width="5" height="7" rx="1.5"/><rect class="nv-eye" x="35" y="29" width="5" height="7" rx="1.5"/><rect class="nv-mouth" x="27" y="46" width="10" height="3" rx="1.5"/></svg><b>Навигашка ничего не нашёл</b><p class="mono">по запросу «'+esc(q)+'»</p><button class="btnp" type="button" data-nv="clear">Сбросить поиск</button></div>';
+}
+$('nvChar').onclick=function(){$('nvBub').hidden?nvMenu():nvHide()};
+$('nvClose').onclick=nvHide;
+
+/* загрузка */
 render();
-fetch('/api/items',{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){ITEMS=d.items||[];CATS=d.cats||[];STATE='ok';render()}).catch(function(){STATE='err';render()});
-</script>
-<button class="nv-char" id="nvChar" type="button" aria-expanded="false" aria-label="Навигашка: помощь по каталогу"><svg class="nv-svg" viewBox="0 0 64 64" aria-hidden="true"><line class="nv-stick" x1="32" y1="9" x2="32" y2="15"/><circle class="nv-ant" cx="32" cy="6" r="4"/><rect class="nv-body" x="11" y="14" width="42" height="40" rx="11"/><rect class="nv-screen" x="19" y="24" width="26" height="17" rx="5"/><rect class="nv-eye" x="24" y="29" width="5" height="7" rx="1.5"/><rect class="nv-eye" x="35" y="29" width="5" height="7" rx="1.5"/><rect class="nv-mouth" x="27" y="46" width="10" height="3" rx="1.5"/></svg></button>
-<div class="nv-bub" id="nvBub" hidden role="status"><span class="nv-who">НАВИГАШКА</span><button class="nv-close" id="nvClose" type="button" aria-label="Закрыть">×</button><p class="nv-txt" id="nvTxt"></p><div class="nv-acts" id="nvActs"></div></div>
-<script>
-(function(){
- var SVG='<svg class="nv-svg" viewBox="0 0 64 64" aria-hidden="true"><line class="nv-stick" x1="32" y1="9" x2="32" y2="15"/><circle class="nv-ant" cx="32" cy="6" r="4"/><rect class="nv-body" x="11" y="14" width="42" height="40" rx="11"/><rect class="nv-screen" x="19" y="24" width="26" height="17" rx="5"/><rect class="nv-eye" x="24" y="29" width="5" height="7" rx="1.5"/><rect class="nv-eye" x="35" y="29" width="5" height="7" rx="1.5"/><rect class="nv-mouth" x="27" y="46" width="10" height="3" rx="1.5"/></svg>';
- var char=document.getElementById('nvChar'),bub=document.getElementById('nvBub'),txt=document.getElementById('nvTxt'),acts=document.getElementById('nvActs');
- var timer=null;
- function show(t,list){
-  clearTimeout(timer);
-  txt.textContent=t;acts.innerHTML='';
-  (list||[]).forEach(function(x){var b=document.createElement('button');b.type='button';b.className='nv-btn';b.textContent=x.label;b.onclick=x.fn;acts.appendChild(b)});
-  bub.hidden=false;char.setAttribute('aria-expanded','true');
- }
- function hide(){bub.hidden=true;char.setAttribute('aria-expanded','false')}
- function back(){return {label:'Назад',fn:menu}}
- function menu(){show('Привет! Я Навигашка. Помогу найти видео, подскажу разделы и объясню, как смотреть.',[
-  {label:'Найти видео',fn:find},{label:'Разделы',fn:sections},{label:'Что нового?',fn:fresh},{label:'Как смотреть?',fn:how}])}
- function find(){show('Введите название в поле поиска над каталогом.',[back()]);document.getElementById('q').focus()}
- function sections(){
-  var a=[{label:'Все видео',fn:function(){location.hash='';show('Открыл все видео.',[back()])}}];
-  CATS.forEach(function(c){a.push({label:c.t,fn:function(){location.hash=c.k;show('Открыл раздел «'+c.t+'».',[back()])}})});
-  a.push(back());show('Вот разделы:',a);
- }
- function fresh(){
-  if(!ITEMS.length){show('Пока в каталоге ничего нет.',[back()]);return}
-  show('Последнее добавленное: «'+ITEMS[0].t+'» ('+catName(ITEMS[0].cat)+').',[{label:'Смотреть',fn:function(){handleOpen(0)}},back()]);
- }
- function how(){show('Видео с YouTube, Vimeo, Kinescope и Google Drive открываются прямо на сайте. Ссылки из Telegram часто показываются не полностью, поэтому в таком случае я предложу смотреть здесь или открыть пост в Telegram.',[back()])}
- function telegram(i){
-  var it=ITEMS[i];
-  show('«'+it.t+'» — это видео из Telegram. Встроенный плеер там часто не показывает ролик целиком, поэтому смотреть здесь может быть неудобно. Что выберете?',[
-   {label:'Смотреть на сайте',fn:function(){hide();openPlayer(i)}},
-   {label:'Открыть в Telegram',fn:function(){window.open(it.u,'_blank','noopener')}}]);
- }
- window.isTg=function(u){return /^https?:\/\/t\.me\//i.test(u||'')};
- window.handleOpen=function(i){var it=ITEMS[i];if(!it)return;if(isTg(it.u))telegram(i);else openPlayer(i)};
- window.nvEmpty=function(q){return '<div class="empty nv-empty">'+SVG+'<b>Навигашка ничего не нашёл</b><p class="mono">по запросу «'+esc(q)+'»</p><button class="btnp" type="button" data-nv="clear">Сбросить поиск</button></div>'};
- char.onclick=function(){bub.hidden?menu():hide()};
- document.getElementById('nvClose').onclick=hide;
- document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!bub.hidden&&$('modal').hidden)hide()});
- setTimeout(function(){
-  if(!sessionStorage.getItem('nvSeen')){sessionStorage.setItem('nvSeen','1');menu();timer=setTimeout(hide,12000)}
- },1500);
-})();
+fetch('/api/items',{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){
+ ITEMS=d.items||[];CATS=d.cats||[];STATE='ok';render();
+ if(!sessionStorage.getItem('nvSeen')){sessionStorage.setItem('nvSeen','1');setTimeout(function(){if($('watch').hidden){nvMenu();nvTimer=setTimeout(nvHide,12000)}},1500)}
+}).catch(function(){STATE='err';render()});
 </script>
 </body></html>

@@ -4,77 +4,137 @@
 <meta name="robots" content="noindex"><title>Редактор · Каталог контента MMP</title>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0e0e0d;--panel:#181817;--ink:#f2f2ef;--mute:#8d8d85;--line:#2e2e2b;--acc:#ff4f00;--mono:'JetBrains Mono',ui-monospace,monospace}
+:root{--bg:#0e0e0d;--panel:#171716;--ink:#f2f2ef;--mute:#8d8d85;--line:#2a2a27;--acc:#ff4f00;--mono:'JetBrains Mono',ui-monospace,monospace}
+html{color-scheme:dark}
 *{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
 body{background:var(--bg);color:var(--ink);font-family:'Onest',Arial,sans-serif;padding:clamp(12px,3vw,32px)}
 .wrap{max-width:1100px;margin:0 auto;display:grid;gap:12px}
-.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px 18px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px 18px}
 .mono{font-family:var(--mono);font-size:12px;color:var(--mute)}
 h1{font-size:20px;font-weight:800}
-.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-input,select{font:inherit;font-size:15px;padding:9px 10px;border:1px solid var(--line);border-radius:4px;background:#0e0e0d;color:var(--ink);width:100%;min-width:0}
+h2{font-size:16px;font-weight:800;margin-bottom:10px}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
+input,select{font:inherit;font-size:15px;padding:9px 10px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--ink);width:100%;min-width:0}
 input:focus,select:focus,button:focus-visible,a:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
-button,.btn{font-family:var(--mono);font-size:13px;font-weight:700;border:1px solid var(--ink);background:var(--panel);color:var(--ink);padding:10px 16px;border-radius:4px;cursor:pointer;box-shadow:0 3px 0 var(--line);text-decoration:none;display:inline-block}
+button,.btn{font-family:var(--mono);font-size:13px;font-weight:700;border:1px solid var(--ink);background:var(--panel);color:var(--ink);padding:10px 14px;border-radius:4px;cursor:pointer;box-shadow:0 3px 0 var(--line);text-decoration:none;display:inline-block}
 button:active{transform:translateY(3px);box-shadow:none}
 .pri{background:var(--acc);border-color:var(--acc);color:#fff;box-shadow:0 3px 0 #a83300}
-.row{display:grid;grid-template-columns:1.6fr 170px 2fr auto;gap:8px;align-items:end;padding:12px 0;border-bottom:1px solid var(--line)}
+.row{display:grid;gap:8px;align-items:end;padding:10px 0;border-bottom:1px solid var(--line)}
 .row:last-child{border-bottom:0}
+.cr{grid-template-columns:1fr auto}
+.vr{grid-template-columns:1.6fr 180px 2fr auto}
 label span{display:block;font-family:var(--mono);font-size:11px;color:var(--mute);margin-bottom:4px}
 .ctl{display:flex;gap:6px}.ctl button{padding:9px 11px}
-#msg{font-family:var(--mono);font-size:13px}.ok{color:#1a7f37}.bad{color:#c62828}
-.top{position:sticky;top:0;z-index:5}
-@media(max-width:820px){.row{grid-template-columns:1fr 1fr}.row>label:nth-child(1),.row>label:nth-child(3){grid-column:1/-1}}
+.addrow{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.addrow input{max-width:360px}
+#msg{font-family:var(--mono);font-size:13px}.ok{color:#4ccf70}.bad{color:#ff6b6b}
+.login{max-width:460px}
+@media(max-width:820px){.vr{grid-template-columns:1fr 1fr}.vr>label:first-child,.vr>label:last-child{grid-column:1/-1}}
 </style></head><body>
 <div class="wrap">
- <section class="box" id="login">
+ <section class="box login" id="login">
   <h1>Вход в редактор</h1>
-  <form id="lf" style="display:flex;gap:8px;margin-top:12px;max-width:460px">
+  <form id="lf" style="display:flex;gap:8px;margin-top:12px">
    <input type="password" id="pw" placeholder="Пароль" autocomplete="current-password" required>
    <button class="pri" type="submit">Войти</button>
   </form>
   <p id="lmsg" class="mono" style="margin-top:8px"></p>
  </section>
 
- <div id="app" hidden style="display:none;gap:12px">
-  <section class="box top bar">
-   <div><h1>Каталог контента MMP</h1><p class="mono">Первая запись показывается на главной как новинка.</p></div>
-   <div class="ctl" style="align-items:center">
+ <div id="app" hidden style="display:grid;gap:12px">
+  <section class="box bar">
+   <div><h1>Каталог контента MMP</h1><p class="mono">Изменения попадают на сайт после «Сохранить».</p></div>
+   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
     <span id="msg"></span>
     <a class="btn" href="/" target="_blank">Открыть сайт</a>
-    <button id="add" type="button">+ Добавить</button>
-    <button id="save" class="pri" type="button">Сохранить</button>
+    <button class="pri" id="save" type="button">Сохранить</button>
    </div>
   </section>
-  <section class="box" id="rows"></section>
+
+  <section class="box">
+   <h2>Категории</h2>
+   <div id="cats"></div>
+   <div class="addrow">
+    <input id="newCat" placeholder="Название новой категории" maxlength="40">
+    <button id="addCat" type="button">+ Добавить категорию</button>
+   </div>
+  </section>
+
+  <section class="box">
+   <h2>Видео</h2>
+   <div id="rows"></div>
+   <div class="addrow"><button id="addVid" type="button">+ Добавить видео</button></div>
+  </section>
  </div>
 </div>
 <script>
-var CATS={news:'Новости',clips:'Клипы',vystup:'Выступления',zakadrom:'За кадром'};
-var $=function(i){return document.getElementById(i)},pw=sessionStorage.getItem('pw')||'',items=[],dirty=false;
+var $=function(i){return document.getElementById(i)};
+var pw=sessionStorage.getItem('pw')||'',items=[],cats=[],dirty=false;
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function api(body){return fetch('/api/items',{method:'POST',headers:{'content-type':'application/json','x-admin-password':pw},body:JSON.stringify(body)}).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||'Ошибка');return j})})}
 function say(t,ok){var m=$('msg');m.textContent=t;m.className=ok?'ok':'bad'}
-function render(){
- $('rows').innerHTML=items.length?items.map(function(x,i){
-  return '<div class="row" data-i="'+i+'">'+
-  '<label><span>название</span><input data-k="t" value="'+esc(x.t)+'" maxlength="120"></label>'+
-  '<label><span>раздел</span><select data-k="cat">'+Object.keys(CATS).map(function(k){return '<option value="'+k+'"'+(k===x.cat?' selected':'')+'>'+CATS[k]+'</option>'}).join('')+'</select></label>'+
-  '<label><span>ссылка на видео</span><input data-k="u" type="url" value="'+esc(x.u)+'" placeholder="https://"></label>'+
-  '<div class="ctl"><button data-a="up" title="Выше">↑</button><button data-a="down" title="Ниже">↓</button><button data-a="del" title="Удалить">✕</button></div></div>'}).join(''):'<p class="mono">Пусто. Нажмите «+ Добавить».</p>';
+function touch(){dirty=true;say('Есть несохранённые изменения',false)}
+function move(a,i,d){var j=i+d;if(j<0||j>=a.length)return;var t=a[i];a[i]=a[j];a[j]=t}
+function catOpts(sel){return cats.map(function(c){return '<option value="'+esc(c.k)+'"'+(c.k===sel?' selected':'')+'>'+esc(c.t)+'</option>'}).join('')}
+function renderCats(){
+ $('cats').innerHTML=cats.length?cats.map(function(c,i){return '<div class="row cr" data-i="'+i+'"><label><span>название</span><input data-k="t" value="'+esc(c.t)+'" maxlength="40"></label><div class="ctl"><button data-a="up" title="Выше">↑</button><button data-a="down" title="Ниже">↓</button><button data-a="del" title="Удалить">✕</button></div></div>'}).join(''):'<p class="mono">Категорий нет. Добавьте первую ниже.</p>';
 }
-function show(){$('login').style.display='none';$('app').style.display='grid';$('app').hidden=false}
-function load(){return fetch('/api/items',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){items=d;render();show()})}
-$('rows').addEventListener('input',function(e){var r=e.target.closest('.row');if(!r)return;items[+r.dataset.i][e.target.dataset.k]=e.target.value;dirty=true;say('Есть несохранённые изменения',false)});
+function renderItems(){
+ $('rows').innerHTML=items.length?items.map(function(x,i){return '<div class="row vr" data-i="'+i+'"><label><span>название</span><input data-k="t" value="'+esc(x.t)+'" maxlength="120"></label><label><span>категория</span><select data-k="cat">'+catOpts(x.cat)+'</select></label><label><span>ссылка на видео</span><input data-k="u" type="url" value="'+esc(x.u)+'" placeholder="https://"></label><div class="ctl"><button data-a="up" title="Выше">↑</button><button data-a="down" title="Ниже">↓</button><button data-a="del" title="Удалить">✕</button></div></div>'}).join(''):'<p class="mono">Видео нет. Нажмите «+ Добавить видео».</p>';
+}
+function renderAll(){renderCats();renderItems()}
+
+$('cats').addEventListener('input',function(e){var r=e.target.closest('.cr');if(!r||e.target.dataset.k!=='t')return;cats[+r.dataset.i].t=e.target.value;touch()});
+$('cats').addEventListener('change',function(){renderItems();});
+$('cats').addEventListener('click',function(e){
+ var b=e.target.closest('button');if(!b)return;
+ var i=+b.closest('.cr').dataset.i,a=b.dataset.a;
+ if(a==='del'){
+  var n=items.filter(function(x){return x.cat===cats[i].k}).length;
+  if(n){alert('В категории «'+cats[i].t+'» есть видео ('+n+'). Сначала переместите их в другую категорию.');return}
+  if(!confirm('Удалить категорию «'+cats[i].t+'»?'))return;
+  cats.splice(i,1);
+ } else if(a==='up')move(cats,i,-1);
+ else if(a==='down')move(cats,i,1);
+ touch();renderAll();
+});
+$('addCat').onclick=function(){
+ var v=$('newCat').value.trim();
+ if(!v){alert('Введите название категории');return}
+ cats.push({k:'c'+Date.now().toString(36),t:v.slice(0,40)});
+ $('newCat').value='';touch();renderAll();
+};
+
+function onItemEdit(e){var r=e.target.closest('.vr');if(!r||!e.target.dataset.k)return;items[+r.dataset.i][e.target.dataset.k]=e.target.value;touch()}
+$('rows').addEventListener('input',onItemEdit);
+$('rows').addEventListener('change',onItemEdit);
 $('rows').addEventListener('click',function(e){
- var b=e.target.closest('button');if(!b)return;var i=+b.closest('.row').dataset.i,a=b.dataset.a;
- if(a==='del'){if(!confirm('Удалить «'+items[i].t+'»?'))return;items.splice(i,1)}
- else if(a==='up'&&i>0){items.splice(i-1,0,items.splice(i,1)[0])}
- else if(a==='down'&&i<items.length-1){items.splice(i+1,0,items.splice(i,1)[0])}
- dirty=true;say('Есть несохранённые изменения',false);render()});
-$('add').onclick=function(){items.unshift({t:'',cat:'news',u:''});dirty=true;render();var f=document.querySelector('.row [data-k="t"]');if(f)f.focus()};
-$('save').onclick=function(){say('Сохраняю...',true);api({items:items}).then(function(r){dirty=false;say('Сохранено: '+r.count+' шт.',true)}).catch(function(e){say(e.message,false)})};
-$('lf').onsubmit=function(e){e.preventDefault();pw=$('pw').value;$('lmsg').textContent='Проверяю...';
- api({check:true}).then(function(){sessionStorage.setItem('pw',pw);return load()}).catch(function(err){$('lmsg').textContent=err.message;$('lmsg').className='mono bad'})};
+ var b=e.target.closest('button');if(!b)return;
+ var i=+b.closest('.vr').dataset.i,a=b.dataset.a;
+ if(a==='del'){if(!confirm('Удалить «'+(items[i].t||'без названия')+'»?'))return;items.splice(i,1)}
+ else if(a==='up')move(items,i,-1);
+ else if(a==='down')move(items,i,1);
+ touch();renderItems();
+});
+$('addVid').onclick=function(){
+ if(!cats.length){alert('Сначала добавьте категорию');return}
+ items.unshift({t:'',cat:cats[0].k,u:''});
+ touch();renderItems();
+ var f=document.querySelector('.vr [data-k="t"]');if(f)f.focus();
+};
+
+$('save').onclick=function(){
+ say('Сохраняю...',true);
+ api({items:items,cats:cats}).then(function(r){dirty=false;say('Сохранено: '+r.items+' видео, '+r.cats+' категорий',true)}).catch(function(e){say(e.message,false)});
+};
+
+function show(){$('login').hidden=true;$('app').hidden=false}
+function load(){return fetch('/api/items',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){items=d.items||[];cats=d.cats||[];renderAll();show()})}
+$('lf').onsubmit=function(e){
+ e.preventDefault();pw=$('pw').value;$('lmsg').textContent='Проверяю...';
+ api({check:true}).then(function(){sessionStorage.setItem('pw',pw);return load()}).catch(function(err){$('lmsg').textContent=err.message;$('lmsg').className='mono bad'});
+};
 window.addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue=''}});
 if(pw){api({check:true}).then(load).catch(function(){sessionStorage.removeItem('pw')})}
 </script></body></html>

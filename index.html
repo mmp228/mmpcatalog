@@ -137,6 +137,78 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
 @keyframes nvbob{50%{transform:translateY(-6px)}}
 @media(max-width:480px){.nv-bub{right:8px;left:8px;width:auto;bottom:96px}.nv-char{left:8px}}
 @media(prefers-reduced-motion:reduce){.nv-char,.nv-svg .nv-eye{animation:none}}
+
+/* ===== плейлист 2.0 ===== */
+.watch{animation:wIn .35s cubic-bezier(.2,.8,.2,1) both}
+@keyframes wIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
+.bubbles{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:-1}
+.bubbles span{position:absolute;border-radius:50%;opacity:0;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.95),rgba(255,255,255,.2) 45%,rgba(255,255,255,.04) 72%)}
+.bubbles span:nth-child(1){width:200px;height:200px;left:4%;top:18%;animation:bub 16s ease-in-out infinite}
+.bubbles span:nth-child(2){width:90px;height:90px;left:80%;top:58%;animation:bub 11s ease-in-out infinite reverse}
+.bubbles span:nth-child(3){width:280px;height:280px;left:58%;top:-10%;animation:bub 19s ease-in-out infinite}
+.bubbles span:nth-child(4){width:54px;height:54px;left:30%;top:78%;animation:bub 8s ease-in-out infinite}
+@keyframes bub{0%,100%{transform:translateY(0) scale(1);opacity:.35}50%{transform:translateY(-34px) scale(1.06);opacity:.7}}
+.wv{position:relative}
+.pbar{height:6px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:6px}
+.pbar i{display:block;height:100%;width:0;border-radius:999px;background:var(--acc);transition:width .45s ease}
+.pl-top{display:flex;justify-content:space-between;align-items:center;padding:8px 8px 4px;font-family:var(--mono);font-size:12px;color:var(--mute)}
+.pl-cat{font-weight:700;color:var(--ink);font-family:var(--sans);font-size:14px}
+.pq{width:100%;margin:4px 0 6px;font-size:14px;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.pli{display:grid;grid-template-columns:96px 1fr auto;gap:10px;padding:6px;border-radius:10px;cursor:pointer;align-items:center;border:1px solid transparent;animation:pliIn .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--d,0)*35ms);transition:background .2s,transform .15s}
+@keyframes pliIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+.pli:hover{background:var(--panel2);transform:translateX(-2px)}
+.pli.on{background:#2a1c15;box-shadow:inset 3px 0 0 var(--acc)}
+.pli .th{position:relative;aspect-ratio:16/9;background:linear-gradient(135deg,#222220,#0b0b0a);border-radius:7px;overflow:hidden}
+.pli .th img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pm{min-width:0;display:grid;gap:2px}
+.pt{font-size:13px;font-weight:700;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.ps{font-size:12px;color:var(--mute)}
+.eq{display:flex;gap:2px;align-items:flex-end;height:14px;color:var(--acc)}
+.eq b{display:block;width:3px;height:100%;background:currentColor;border-radius:2px;animation:eqb .9s ease-in-out infinite}
+.eq b:nth-child(2){animation-delay:.2s}.eq b:nth-child(3){animation-delay:.4s}
+@keyframes eqb{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+.b2.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.b2:disabled{opacity:.35;cursor:not-allowed}
+.b2:active:not(:disabled){transform:translateY(1px)}
+
+/* тема Aero */
+.watch.aero{background:radial-gradient(120% 90% at 50% 0%,#c9f1ff 0%,#56b7ec 40%,#1a6bb3 78%,#0a2f5e 100%);color:#0a2540}
+.watch.aero .bubbles{z-index:-1}
+.watch.aero .glass,.watch.aero .wbar{background:linear-gradient(180deg,rgba(255,255,255,.68),rgba(255,255,255,.22));border:1px solid rgba(255,255,255,.8);box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 10px 30px rgba(4,40,90,.35);backdrop-filter:blur(14px) saturate(150%);-webkit-backdrop-filter:blur(14px) saturate(150%)}
+.watch.aero .wbar{border-radius:0 0 18px 18px}
+.watch.aero .wv{border:1px solid rgba(255,255,255,.85);box-shadow:0 16px 44px rgba(0,25,70,.45);border-radius:16px}
+.watch.aero .wv::before{content:"";position:absolute;inset:0 0 55% 0;background:linear-gradient(rgba(255,255,255,.3),rgba(255,255,255,0));pointer-events:none;z-index:1;border-radius:16px 16px 0 0}
+.watch.aero .wv.tg{background:#fff}
+.watch.aero .wt b{color:#06304f;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.watch.aero .sub,.watch.aero .mono,.watch.aero .ps,.watch.aero .pl-top{color:#1b4a72}
+.watch.aero .pl-cat{color:#06304f}
+.watch.aero .pq{background:rgba(255,255,255,.7);border-color:rgba(255,255,255,.9);color:#06304f}
+.watch.aero .pbar{background:rgba(255,255,255,.55);box-shadow:inset 0 1px 2px rgba(0,30,70,.3)}
+.watch.aero .pbar i{background:linear-gradient(180deg,#d6ffd0,#4fc84a)}
+.watch.aero .pli:hover{background:rgba(255,255,255,.45)}
+.watch.aero .pli.on{background:linear-gradient(180deg,#eefcff,#8bd7fa);border-color:#5ab5e8;box-shadow:inset 0 1px 0 #fff,0 4px 12px rgba(0,50,110,.2)}
+.watch.aero .pli.on .pt{color:#06304f}
+.watch.aero .pli .th{background:linear-gradient(135deg,#8ad1f5,#1f6fb8);border:1px solid #fff;box-shadow:0 2px 6px rgba(0,40,90,.3)}
+.watch.aero .pt{color:#06304f}
+.watch.aero .eq{color:#1f7a22}
+.watch.aero .b2{background:linear-gradient(180deg,#f3fdff,#8fd9f8 52%,#3aa6e0);border:1px solid #2c7fb8;color:#06304f;box-shadow:inset 0 1px 0 #fff,0 2px 6px rgba(0,40,90,.35);font-weight:700;position:relative;overflow:hidden}
+.watch.aero .b2::before{content:"";position:absolute;left:8%;right:8%;top:2px;height:45%;border-radius:999px;background:linear-gradient(rgba(255,255,255,.9),rgba(255,255,255,.1));pointer-events:none}
+.watch.aero .b2:hover{filter:brightness(1.06)}
+.watch.aero .b2.pri{background:linear-gradient(180deg,#e0ffd8,#6ed85a 55%,#2fa631);border-color:#1f7a22;color:#063a0c}
+.watch.aero .b2.on{background:linear-gradient(180deg,#fff3c4,#ffc857 55%,#e0962b);border-color:#a86d12;color:#4a2c00}
+.watch.aero .b2:disabled{opacity:.5}
+.watch.aero .pbar i{box-shadow:0 0 8px rgba(120,255,120,.7)}
+
+@media(max-width:900px){
+ .wbar{flex-wrap:wrap}
+ .wbtns{flex-wrap:wrap;justify-content:flex-end}
+ #wRep,#wTheme{display:none}
+ .plist{max-height:54vh}
+}
+@media(max-width:480px){
+ .wbtns .b2{padding:6px 9px;font-size:11px}
+ .pli{grid-template-columns:78px 1fr auto}
+}
 </style></head>
 <body>
 <div class="wrap">
@@ -170,18 +242,28 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
  <footer class="mono"><span>MATVEY MONTAGE PRODUCTION</span><span>Каталог контента MMP</span></footer>
 </div>
 
-<div class="watch" id="watch" hidden role="dialog" aria-modal="true" aria-label="Просмотр">
+<div class="watch aero" id="watch" hidden role="dialog" aria-modal="true" aria-label="Просмотр">
+ <div class="bubbles" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
  <div class="wbar">
-  <div class="wt"><span class="mono" id="wCat"></span><b id="wTitle"></b></div>
+  <div class="wt"><span class="mono" id="wCat"></span><b id="wTitle"></b><div class="pbar"><i id="wPb"></i></div></div>
   <div class="wbtns">
-   <a class="b2" id="wOpen" target="_blank" rel="noopener">в новой вкладке</a>
-   <button class="b2 pri" id="wNext" type="button">Следующее ▶</button>
+   <button class="b2" id="wPrev" type="button" title="Назад (←)">◀</button>
+   <button class="b2 pri" id="wNext" type="button" title="Вперёд (→)">Далее ▶</button>
+   <button class="b2" id="wRep" type="button" title="Повтор плейлиста" aria-pressed="false">⟲</button>
+   <button class="b2" id="wSnd" type="button" title="Звук (M)" aria-pressed="false">🔊</button>
+   <button class="b2" id="wTheme" type="button" title="Смена темы">Aero</button>
+   <a class="b2" id="wOpen" target="_blank" rel="noopener">↗</a>
    <button class="b2" id="wClose" type="button">✕ Закрыть</button>
   </div>
  </div>
  <div class="wbody">
   <div><div class="wv" id="wv"></div><p class="sub wmeta" id="wSub"></p></div>
-  <aside class="plist" id="plist" aria-label="Плейлист"></aside>
+  <aside class="plist glass" aria-label="Плейлист">
+   <div class="pl-top"><span class="pl-cat" id="plCat"></span><span id="plCnt"></span></div>
+   <div class="pbar"><i id="plPb"></i></div>
+   <input id="pq" class="pq" type="search" placeholder="Найти в плейлисте" aria-label="Найти в плейлисте" autocomplete="off">
+   <div id="plItems"></div>
+  </aside>
  </div>
 </div>
 
@@ -262,11 +344,14 @@ function openWatch(i){
  PI=PL.indexOf(it);
  $('wCat').textContent=catName(it.cat)+' · '+PL.length+' видео';
  nvHide();
- $('watch').hidden=false;document.body.style.overflow='hidden';
+ $('watch').hidden=false;document.body.style.overflow='hidden';sfx('open');
  playCur();
  $('wClose').focus();
 }
-function closeWatch(){$('watch').hidden=true;$('wv').innerHTML='';PL=[];document.body.style.overflow=''}
+function closeWatch(){
+ $('watch').hidden=true;$('wv').innerHTML='';PL=[];document.body.style.overflow='';
+ if(window.kPlayer){try{Promise.resolve(window.kPlayer.destroy()).catch(function(){})}catch(_){}window.kPlayer=null}
+}
 function playCur(){
  var it=PL[PI],e=embed(it.u);
  $('wTitle').textContent=it.t;$('wSub').textContent=it.sub||'';$('wOpen').href=it.u;
@@ -276,8 +361,7 @@ function playCur(){
  var mv=$('wv');
  mv.className='wv'+(e.tg?' tg':'');
  if(e.t==='k'){
-  mv.innerHTML='<div id="kpl" style="width:100%;height:100%"></div>';
-  kinePlay(e.s);
+  kinePlay(e.s,mv);
  } else {
   mv.innerHTML=e.t==='v'?'<video src="'+esc(e.s)+'" controls autoplay playsinline></video>':'<iframe id="wf" src="'+esc(e.s)+'" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
   if(e.t==='v')mv.querySelector('video').onended=next;
@@ -288,35 +372,105 @@ function playCur(){
  }
  if(!isAuto(e))nvShow('Это видео не переключается само и не запускается автоматически. Нажмите ▶ в плеере. Автопереход работает для YouTube, Vimeo, Kinescope и mp4.',[{label:'Понятно',fn:nvHide}]);
 }
-function kinePlay(id){
+function kinePlay(id,mv){
  var url='https://kinescope.io/'+id;
- function go(f){
-  f.create('kpl',{url:url,behavior:{autoPlay:true}}).then(function(p){
+ function start(){
+  if(!window.kFactory){loadKinescopeApi(start);return}
+  mv.innerHTML='<div id="kpl" style="width:100%;height:100%"></div>';
+  window.kFactory.create('kpl',{url:url,behavior:{autoPlay:true}}).then(function(p){
+   window.kPlayer=p;
    p.on(p.Events.Ended,next);
   }).catch(function(){
    nvShow('Не удалось открыть видео Kinescope. Проверьте, разрешён ли показ этого видео на сайте в настройках Kinescope.',[{label:'Понятно',fn:nvHide}]);
   });
  }
- if(window.kFactory){go(window.kFactory);return}
- window.onKinescopeIframeAPIReady=function(f){window.kFactory=f;go(f)};
+ /* по документации Kinescope: чтобы создать новый плеер, старый сначала нужно уничтожить */
+ var old=window.kPlayer;window.kPlayer=null;
+ if(old){Promise.resolve().then(function(){return old.destroy()}).then(start,start)}
+ else start();
+}
+function loadKinescopeApi(cb){
+ window.onKinescopeIframeAPIReady=function(f){window.kFactory=f;cb()};
  if(!document.getElementById('kscript')){
   var sc=document.createElement('script');sc.id='kscript';sc.src='https://player.kinescope.io/latest/iframe.player.js';document.head.appendChild(sc);
  }
 }
 function next(){
- if(PI<PL.length-1){PI++;playCur();return}
+ if(PI<PL.length-1){PI++;sfx('next');playCur();return}
+ if(repeatOn&&PL.length){PI=0;sfx('next');playCur();return}
+ sfx('end');
  nvShow('Плейлист закончился. Выберите видео из списка справа или закройте плеер.',[{label:'Закрыть',fn:closeWatch}]);
 }
-function renderPL(){
- $('plist').innerHTML='<div class="pl-h">'+esc(catName(PL[0]?PL[0].cat:''))+' · '+PL.length+' видео</div>'+PL.map(function(x,k){
-  var c=cover(x);
-  return '<div class="pli" role="button" tabindex="0" data-k="'+k+'" aria-current="'+(k===PI?'true':'false')+'"><span class="th">'+(c?'<img src="'+esc(c)+'" alt="" loading="lazy" onerror="this.remove()">':'')+'</span><span><span class="pt">'+esc(x.t)+'</span>'+(x.sub?'<span class="ps">'+esc(x.sub)+'</span>':'')+(isTg(x.u)?'<span class="ps">из Telegram</span>':'')+'</span></div>';
- }).join('');
+var repeatOn=false,muted=lsGet('wmute')==='1',theme=lsGet('wtheme')||'aero',pq='',AC=null;
+function lsGet(k){try{return localStorage.getItem(k)}catch(_){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(_){}}
+function sfx(type){
+ if(muted)return;
+ try{
+  AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+  if(AC.state==='suspended')AC.resume();
+  var t=AC.currentTime;
+  var seq={
+   click:[[880,0,.05,.06]],
+   open:[[523,0,.09,.06],[784,.08,.12,.06]],
+   next:[[660,0,.08,.07],[990,.07,.12,.07]],
+   end:[[523,0,.14,.07],[659,.13,.14,.07],[784,.26,.3,.08]]
+  }[type]||[];
+  seq.forEach(function(n){
+   var o=AC.createOscillator(),g=AC.createGain();
+   o.type='sine';o.frequency.value=n[0];
+   g.gain.setValueAtTime(0.0001,t+n[1]);
+   g.gain.exponentialRampToValueAtTime(n[3],t+n[1]+0.02);
+   g.gain.exponentialRampToValueAtTime(0.0001,t+n[1]+n[2]);
+   o.connect(g);g.connect(AC.destination);
+   o.start(t+n[1]);o.stop(t+n[1]+n[2]+0.05);
+  });
+ }catch(_){}
 }
-$('plist').addEventListener('click',function(e){var r=e.target.closest('.pli');if(!r)return;PI=+r.dataset.k;playCur()});
-$('plist').addEventListener('keydown',function(e){if(e.key!=='Enter')return;var r=e.target.closest('.pli');if(!r)return;PI=+r.dataset.k;playCur()});
-$('wNext').onclick=next;
+function syncBtns(){
+ $('wPrev').disabled=PI<=0;
+ $('wNext').disabled=PI>=PL.length-1&&!repeatOn;
+ $('wRep').setAttribute('aria-pressed',repeatOn?'true':'false');
+ $('wRep').classList.toggle('on',repeatOn);
+}
+function syncSnd(){$('wSnd').textContent=muted?'🔇':'🔊';$('wSnd').setAttribute('aria-pressed',muted?'true':'false')}
+function applyTheme(){$('watch').classList.toggle('aero',theme==='aero');$('wTheme').textContent=theme==='aero'?'Aero':'Тёмная'}
+function renderPL(){
+ var q=pq.trim().toLowerCase();
+ $('plCat').textContent=PL[0]?catName(PL[0].cat):'';
+ $('plCnt').textContent=(PI+1)+' / '+PL.length;
+ var w=PL.length?((PI+1)/PL.length*100)+'%':'0%';
+ $('wPb').style.width=w;$('plPb').style.width=w;
+ var rows='';
+ PL.forEach(function(x,k){
+  if(q&&(x.t+' '+(x.sub||'')).toLowerCase().indexOf(q)<0)return;
+  var c=cover(x),on=k===PI;
+  rows+='<div class="pli'+(on?' on':'')+'" role="button" tabindex="0" data-k="'+k+'" aria-current="'+(on?'true':'false')+'" style="--d:'+Math.min(k,12)+'">'+
+   '<span class="th">'+(c?'<img src="'+esc(c)+'" alt="" loading="lazy" onerror="this.remove()">':'')+'</span>'+
+   '<span class="pm"><span class="pt">'+esc(x.t)+'</span>'+(x.sub?'<span class="ps">'+esc(x.sub)+'</span>':'')+(isTg(x.u)?'<span class="ps">из Telegram</span>':'')+'</span>'+
+   (on?'<span class="eq"><b></b><b></b><b></b></span>':'')+'</div>';
+ });
+ $('plItems').innerHTML=rows||'<p class="mono" style="padding:10px">Ничего не найдено</p>';
+ var cur=$('plItems').querySelector('.pli.on');
+ if(cur&&cur.scrollIntoView)cur.scrollIntoView({block:'nearest'});
+ syncBtns();
+}
+$('plItems').addEventListener('click',function(e){var r=e.target.closest('.pli');if(!r)return;PI=+r.dataset.k;sfx('click');playCur()});
+$('plItems').addEventListener('keydown',function(e){if(e.key!=='Enter')return;var r=e.target.closest('.pli');if(!r)return;PI=+r.dataset.k;playCur()});
+$('pq').addEventListener('input',function(){pq=this.value;renderPL()});
+$('wNext').onclick=function(){sfx('click');next()};
+$('wPrev').onclick=function(){if(PI>0){PI--;sfx('click');playCur()}};
+$('wRep').onclick=function(){repeatOn=!repeatOn;lsSet('wrep',repeatOn?'1':'0');syncBtns()};
+$('wSnd').onclick=function(){muted=!muted;lsSet('wmute',muted?'1':'0');syncSnd();if(!muted)sfx('click')};
+$('wTheme').onclick=function(){theme=theme==='aero'?'dark':'aero';lsSet('wtheme',theme);applyTheme()};
 $('wClose').onclick=closeWatch;
+document.addEventListener('keydown',function(e){
+ if($('watch').hidden||/INPUT|TEXTAREA/.test(e.target.tagName))return;
+ if(e.key==='ArrowRight'||e.key==='n'||e.key==='N'){e.preventDefault();$('wNext').click()}
+ else if(e.key==='ArrowLeft'||e.key==='p'||e.key==='P'){e.preventDefault();$('wPrev').click()}
+ else if(e.key==='m'||e.key==='M'){$('wSnd').click()}
+});
+repeatOn=lsGet('wrep')==='1';applyTheme();syncSnd();
 window.addEventListener('message',function(e){
  if($('watch').hidden)return;
  if(/youtube/.test(e.origin)&&typeof e.data==='string'){

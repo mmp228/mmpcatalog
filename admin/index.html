@@ -4,137 +4,283 @@
 <meta name="robots" content="noindex"><title>Редактор · Каталог контента MMP</title>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0e0e0d;--panel:#171716;--ink:#f2f2ef;--mute:#8d8d85;--line:#2a2a27;--acc:#ff4f00;--mono:'JetBrains Mono',ui-monospace,monospace}
+:root{--bg:#0e0e0d;--panel:#171716;--panel2:#121211;--ink:#f2f2ef;--mute:#8d8d85;--line:#2a2a27;--acc:#ff4f00;--bad:#ff6b6b;--ok:#4ccf70;--mono:'JetBrains Mono',ui-monospace,monospace}
 html{color-scheme:dark}
 *{box-sizing:border-box;margin:0;padding:0}
 [hidden]{display:none!important}
-body{background:var(--bg);color:var(--ink);font-family:'Onest',Arial,sans-serif;padding:clamp(12px,3vw,32px)}
-.wrap{max-width:1100px;margin:0 auto;display:grid;gap:12px}
-.box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px 18px}
+body{background:var(--bg);color:var(--ink);font-family:'Onest',Arial,sans-serif;font-size:14px;padding:14px}
+button,input,select{font:inherit;color:var(--ink)}
+:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
 .mono{font-family:var(--mono);font-size:12px;color:var(--mute)}
-h1{font-size:20px;font-weight:800}
-h2{font-size:16px;font-weight:800;margin-bottom:10px}
-.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
-input,select{font:inherit;font-size:15px;padding:9px 10px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--ink);width:100%;min-width:0}
-input:focus,select:focus,button:focus-visible,a:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
-button,.btn{font-family:var(--mono);font-size:13px;font-weight:700;border:1px solid var(--ink);background:var(--panel);color:var(--ink);padding:10px 14px;border-radius:4px;cursor:pointer;box-shadow:0 3px 0 var(--line);text-decoration:none;display:inline-block}
-button:active{transform:translateY(3px);box-shadow:none}
-.pri{background:var(--acc);border-color:var(--acc);color:#fff;box-shadow:0 3px 0 #a83300}
-.row{display:grid;gap:8px;align-items:end;padding:10px 0;border-bottom:1px solid var(--line)}
-.row:last-child{border-bottom:0}
-.cr{grid-template-columns:1fr auto}
-.vr{grid-template-columns:1.6fr 180px 2fr auto}
-label span{display:block;font-family:var(--mono);font-size:11px;color:var(--mute);margin-bottom:4px}
-.ctl{display:flex;gap:6px}.ctl button{padding:9px 11px}
-.addrow{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
-.addrow input{max-width:360px}
-#msg{font-family:var(--mono);font-size:13px}.ok{color:#4ccf70}.bad{color:#ff6b6b}
-.login{max-width:460px}
-@media(max-width:820px){.vr{grid-template-columns:1fr 1fr}.vr>label:first-child,.vr>label:last-child{grid-column:1/-1}}
+.wrap{max-width:1240px;margin:0 auto;display:grid;gap:10px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:8px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;position:sticky;top:0;z-index:5}
+.top h1{font-size:16px;font-weight:800}
+.top .stat{font-family:var(--mono);font-size:12px;color:var(--mute);margin-top:2px}
+.acts{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:12px;font-weight:700;border:1px solid var(--line);background:var(--panel2);padding:7px 11px;border-radius:5px;cursor:pointer;text-decoration:none;color:var(--ink);white-space:nowrap}
+.btn:hover{border-color:var(--ink)}
+.btn:disabled{opacity:.35;cursor:not-allowed;border-color:var(--line)}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.pri:hover{filter:brightness(1.1)}
+.btn.sm{padding:5px 9px}
+#msg{font-family:var(--mono);font-size:12px}.ok{color:var(--ok)}.bad{color:var(--bad)}
+.main{display:grid;grid-template-columns:260px 1fr;gap:10px;align-items:start}
+.sec{padding:10px 12px}
+.sec h2{font-size:13px;font-weight:800;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.list{display:grid;gap:4px}
+.item{display:grid;gap:6px;align-items:center;padding:6px;border:1px solid transparent;border-radius:6px;background:var(--panel2)}
+.item.bad-row{border-color:var(--bad)}
+.cat-row{grid-template-columns:1fr auto auto}
+.cat-row input{padding:6px 8px}
+.cnt{font-family:var(--mono);font-size:11px;color:var(--mute);min-width:24px;text-align:right}
+.add{display:flex;gap:6px;margin-top:8px}
+.add input{flex:1;min-width:0}
+input,select{background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:6px 8px;width:100%;min-width:0;font-size:14px}
+input::placeholder{color:#5d5d57}
+.filters{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.chip{font-family:var(--mono);font-size:12px;border:1px solid var(--line);background:none;border-radius:999px;padding:5px 11px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.vhead,.vrow{display:grid;grid-template-columns:1.5fr 1.2fr 160px 1.6fr 96px;gap:6px;align-items:center}
+.vhead{font-family:var(--mono);font-size:11px;color:var(--mute);padding:0 6px 4px}
+.vrow{padding:6px;border:1px solid transparent;border-bottom-color:var(--line);border-radius:6px}
+.vrow:hover{background:var(--panel2)}
+.vrow.bad-row{border-color:var(--bad);background:rgba(255,107,107,.06)}
+.vrow .ctl{display:flex;gap:4px;justify-content:flex-end}
+.vrow .ctl button{padding:5px 8px;font-size:12px;border:1px solid var(--line);background:var(--panel2);border-radius:4px;cursor:pointer}
+.vrow .ctl button:hover:not(:disabled){border-color:var(--ink)}
+.vrow .ctl button:disabled{opacity:.3;cursor:not-allowed}
+.empty{padding:20px;text-align:center}
+.login{max-width:420px;margin:12vh auto 0;padding:18px}
+.login form{display:flex;gap:8px;margin-top:10px}
+.login input{flex:1}
+@media(max-width:900px){
+ .main{grid-template-columns:1fr}
+ .vhead{display:none}
+ .vrow{grid-template-columns:1fr 1fr}
+ .vrow>input:nth-child(1),.vrow>input:nth-child(4){grid-column:1/-1}
+ .vrow .ctl{grid-column:1/-1;justify-content:flex-start}
+}
+/* Навигашка */
+.nv-char{position:fixed;left:14px;bottom:14px;z-index:40;width:64px;height:64px;padding:0;border:0;background:none;cursor:pointer;animation:nvbob 3s ease-in-out infinite}
+.nv-char:focus-visible{outline:3px solid var(--acc);outline-offset:4px;border-radius:50%}
+.nv-svg{width:64px;height:64px;overflow:visible;display:block}
+.nv-svg .nv-body,.nv-svg .nv-ant{fill:var(--acc)}
+.nv-svg .nv-stick{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.nv-svg .nv-screen{fill:#0e0e0d}
+.nv-svg .nv-eye{fill:var(--acc);transform-box:fill-box;transform-origin:center;animation:nvblink 4s infinite}
+.nv-svg .nv-mouth{fill:#0e0e0d}
+.nv-bub{position:fixed;left:12px;bottom:88px;z-index:40;width:min(340px,calc(100vw - 24px));background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 12px 10px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.nv-bub::after{content:"";position:absolute;left:30px;bottom:-7px;width:12px;height:12px;background:var(--panel);border-right:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg)}
+.nv-who{display:block;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--acc);letter-spacing:.06em;margin-bottom:5px}
+.nv-txt{font-size:13px;line-height:1.5;padding-right:18px;white-space:pre-line}
+.nv-acts{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.nv-close{position:absolute;top:6px;right:8px;background:none;border:0;color:var(--mute);font-size:18px;cursor:pointer;line-height:1;padding:4px}
+.nv-btn{font-family:var(--mono);font-size:11px;font-weight:700;border:1px solid var(--ink);background:none;border-radius:999px;padding:6px 11px;cursor:pointer}
+.nv-btn:hover{background:var(--ink);color:var(--bg)}
+@keyframes nvblink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+@keyframes nvbob{50%{transform:translateY(-5px)}}
+@media(prefers-reduced-motion:reduce){.nv-char,.nv-svg .nv-eye{animation:none}}
 </style></head><body>
-<div class="wrap">
- <section class="box login" id="login">
-  <h1>Вход в редактор</h1>
-  <form id="lf" style="display:flex;gap:8px;margin-top:12px">
-   <input type="password" id="pw" placeholder="Пароль" autocomplete="current-password" required>
-   <button class="pri" type="submit">Войти</button>
-  </form>
-  <p id="lmsg" class="mono" style="margin-top:8px"></p>
- </section>
 
- <div id="app" hidden style="display:grid;gap:12px">
-  <section class="box bar">
-   <div><h1>Каталог контента MMP</h1><p class="mono">Изменения попадают на сайт после «Сохранить».</p></div>
-   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-    <span id="msg"></span>
-    <a class="btn" href="/" target="_blank">Открыть сайт</a>
-    <button class="pri" id="save" type="button">Сохранить</button>
+<section class="box login" id="login" hidden>
+ <h1 style="font-size:16px;font-weight:800">Вход в редактор</h1>
+ <form id="lf">
+  <input type="password" id="pw" placeholder="Пароль" autocomplete="current-password" required>
+  <button class="btn pri" type="submit">Войти</button>
+ </form>
+ <p id="lmsg" class="mono" style="margin-top:8px"></p>
+</section>
+
+<div class="wrap" id="app" hidden>
+ <header class="box top">
+  <div>
+   <h1>Каталог контента MMP</h1>
+   <div class="stat" id="stat"></div>
+  </div>
+  <div class="acts">
+   <span id="msg"></span>
+   <a class="btn" href="/" target="_blank">Открыть сайт</a>
+   <button class="btn pri" id="save" type="button">Сохранить</button>
+  </div>
+ </header>
+
+ <div class="main">
+  <section class="box sec">
+   <h2>Категории <span class="mono" id="catTotal"></span></h2>
+   <div class="list" id="cats"></div>
+   <div class="add">
+    <input id="newCat" placeholder="Новая категория" maxlength="40">
+    <button class="btn" id="addCat" type="button">+</button>
    </div>
   </section>
 
-  <section class="box">
-   <h2>Категории</h2>
-   <div id="cats"></div>
-   <div class="addrow">
-    <input id="newCat" placeholder="Название новой категории" maxlength="40">
-    <button id="addCat" type="button">+ Добавить категорию</button>
-   </div>
-  </section>
-
-  <section class="box">
-   <h2>Видео</h2>
-   <div id="rows"></div>
-   <div class="addrow"><button id="addVid" type="button">+ Добавить видео</button></div>
+  <section class="box sec">
+   <h2>Видео <button class="btn pri sm" id="addVid" type="button">+ Видео</button></h2>
+   <div class="filters" id="filters"></div>
+   <div class="vhead"><span>Название</span><span>Подзаголовок</span><span>Категория</span><span>Ссылка</span><span></span></div>
+   <div class="list" id="rows"></div>
+   <p class="mono" id="hint" style="margin-top:8px"></p>
   </section>
  </div>
 </div>
+
+<button class="nv-char" id="nvChar" type="button" aria-expanded="false" aria-label="Навигашка: подсказки">
+ <svg class="nv-svg" viewBox="0 0 64 64" aria-hidden="true"><line class="nv-stick" x1="32" y1="9" x2="32" y2="15"/><circle class="nv-ant" cx="32" cy="6" r="4"/><rect class="nv-body" x="11" y="14" width="42" height="40" rx="11"/><rect class="nv-screen" x="19" y="24" width="26" height="17" rx="5"/><rect class="nv-eye" x="24" y="29" width="5" height="7" rx="1.5"/><rect class="nv-eye" x="35" y="29" width="5" height="7" rx="1.5"/><rect class="nv-mouth" x="27" y="46" width="10" height="3" rx="1.5"/></svg>
+</button>
+<div class="nv-bub" id="nvBub" hidden role="status">
+ <span class="nv-who">НАВИГАШКА</span>
+ <button class="nv-close" id="nvClose" type="button" aria-label="Закрыть">×</button>
+ <p class="nv-txt" id="nvTxt"></p>
+ <div class="nv-acts" id="nvActs"></div>
+</div>
+
 <script>
 var $=function(i){return document.getElementById(i)};
-var pw=sessionStorage.getItem('pw')||'',items=[],cats=[],dirty=false;
+var pw=sessionStorage.getItem('pw')||'',items=[],cats=[],dirty=false,filter='',lastSave='';
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function api(body){return fetch('/api/items',{method:'POST',headers:{'content-type':'application/json','x-admin-password':pw},body:JSON.stringify(body)}).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||'Ошибка');return j})})}
-function say(t,ok){var m=$('msg');m.textContent=t;m.className=ok?'ok':'bad'}
-function touch(){dirty=true;say('Есть несохранённые изменения',false)}
+function catName(k){var c=cats.find(function(c){return c.k===k});return c?c.t:'—'}
+function countIn(k){return items.filter(function(x){return x.cat===k}).length}
 function move(a,i,d){var j=i+d;if(j<0||j>=a.length)return;var t=a[i];a[i]=a[j];a[j]=t}
-function catOpts(sel){return cats.map(function(c){return '<option value="'+esc(c.k)+'"'+(c.k===sel?' selected':'')+'>'+esc(c.t)+'</option>'}).join('')}
+
+/* проверка данных: одно место, которое считает проблемы */
+function problems(){
+ var out=[];
+ items.forEach(function(x,i){
+  var n=i+1;
+  if(!String(x.t||'').trim())out.push({i:i,text:'Видео '+n+': нет названия'});
+  if(!/^https?:\/\//i.test(String(x.u||'').trim()))out.push({i:i,text:'Видео '+n+'«'+(x.t||'без названия')+'»: нет ссылки или она не начинается с https://'});
+  if(!cats.some(function(c){return c.k===x.cat}))out.push({i:i,text:'Видео '+n+': не выбрана категория'});
+ });
+ return out;
+}
+function status(){
+ var p=problems();
+ $('stat').textContent='видео: '+items.length+' · категорий: '+cats.length+(p.length?' · проблем: '+p.length:'')+(lastSave?' · сохранено в '+lastSave:'')+(dirty?' · есть несохранённые':'');
+ $('catTotal').textContent=cats.length;
+}
+function touch(){dirty=true;$('msg').textContent='';status()}
+
 function renderCats(){
- $('cats').innerHTML=cats.length?cats.map(function(c,i){return '<div class="row cr" data-i="'+i+'"><label><span>название</span><input data-k="t" value="'+esc(c.t)+'" maxlength="40"></label><div class="ctl"><button data-a="up" title="Выше">↑</button><button data-a="down" title="Ниже">↓</button><button data-a="del" title="Удалить">✕</button></div></div>'}).join(''):'<p class="mono">Категорий нет. Добавьте первую ниже.</p>';
+ $('cats').innerHTML=cats.length?cats.map(function(c,i){
+  return '<div class="item cat-row" data-i="'+i+'"><input data-k="t" value="'+esc(c.t)+'" maxlength="40" title="Переименовать"><span class="cnt" title="Видео в категории">'+countIn(c.k)+'</span><span class="acts"><button class="btn sm" data-a="up" title="Выше">↑</button><button class="btn sm" data-a="down" title="Ниже">↓</button><button class="btn sm" data-a="del" title="Удалить">✕</button></span></div>';
+ }).join(''):'<p class="mono">Категорий нет</p>';
+}
+function renderFilters(){
+ $('filters').innerHTML='<button class="chip" type="button" data-f="" aria-pressed="'+(filter===''?'true':'false')+'">Все · '+items.length+'</button>'+
+  cats.map(function(c){return '<button class="chip" type="button" data-f="'+esc(c.k)+'" aria-pressed="'+(filter===c.k?'true':'false')+'">'+esc(c.t)+' · '+countIn(c.k)+'</button>'}).join('');
 }
 function renderItems(){
- $('rows').innerHTML=items.length?items.map(function(x,i){return '<div class="row vr" data-i="'+i+'"><label><span>название</span><input data-k="t" value="'+esc(x.t)+'" maxlength="120"></label><label><span>категория</span><select data-k="cat">'+catOpts(x.cat)+'</select></label><label><span>ссылка на видео</span><input data-k="u" type="url" value="'+esc(x.u)+'" placeholder="https://"></label><div class="ctl"><button data-a="up" title="Выше">↑</button><button data-a="down" title="Ниже">↓</button><button data-a="del" title="Удалить">✕</button></div></div>'}).join(''):'<p class="mono">Видео нет. Нажмите «+ Добавить видео».</p>';
+ var bad={};problems().forEach(function(p){bad[p.i]=true});
+ var opts=function(sel){return cats.map(function(c){return '<option value="'+esc(c.k)+'"'+(c.k===sel?' selected':'')+'>'+esc(c.t)+'</option>'}).join('')};
+ var rows=[];
+ items.forEach(function(x,i){if(!filter||x.cat===filter)rows.push(i)});
+ $('rows').innerHTML=rows.length?rows.map(function(i){
+  var x=items[i],dis=filter?' disabled title="Сбросьте фильтр, чтобы менять порядок"':'';
+  return '<div class="vrow'+(bad[i]?' bad-row':'')+'" data-i="'+i+'">'+
+   '<input data-k="t" value="'+esc(x.t)+'" placeholder="Название" maxlength="120">'+
+   '<input data-k="sub" value="'+esc(x.sub||'')+'" placeholder="Например: 1 серия, 28 мин" maxlength="160">'+
+   '<select data-k="cat">'+opts(x.cat)+'</select>'+
+   '<input data-k="u" type="url" value="'+esc(x.u)+'" placeholder="https://">'+
+   '<span class="ctl"><button data-a="up"'+dis+' title="Выше">↑</button><button data-a="down"'+dis+' title="Ниже">↓</button><button data-a="del" title="Удалить">✕</button></span></div>';
+ }).join(''):'<p class="mono empty">'+(items.length?'В этой категории пока нет видео':'Видео нет. Нажмите «+ Видео»')+'</p>';
+ $('hint').textContent=filter?'Сейчас показана одна категория. Чтобы менять порядок, выберите «Все».':'';
 }
-function renderAll(){renderCats();renderItems()}
+function renderAll(){renderCats();renderFilters();renderItems();status()}
 
-$('cats').addEventListener('input',function(e){var r=e.target.closest('.cr');if(!r||e.target.dataset.k!=='t')return;cats[+r.dataset.i].t=e.target.value;touch()});
-$('cats').addEventListener('change',function(){renderItems();});
+/* категории */
+$('cats').addEventListener('input',function(e){var r=e.target.closest('.cat-row');if(!r||e.target.dataset.k!=='t')return;cats[+r.dataset.i].t=e.target.value;touch()});
+$('cats').addEventListener('change',function(){renderAll()});
 $('cats').addEventListener('click',function(e){
  var b=e.target.closest('button');if(!b)return;
- var i=+b.closest('.cr').dataset.i,a=b.dataset.a;
+ var i=+b.closest('.cat-row').dataset.i,a=b.dataset.a;
  if(a==='del'){
-  var n=items.filter(function(x){return x.cat===cats[i].k}).length;
+  var n=countIn(cats[i].k);
   if(n){alert('В категории «'+cats[i].t+'» есть видео ('+n+'). Сначала переместите их в другую категорию.');return}
   if(!confirm('Удалить категорию «'+cats[i].t+'»?'))return;
+  if(filter===cats[i].k)filter='';
   cats.splice(i,1);
  } else if(a==='up')move(cats,i,-1);
  else if(a==='down')move(cats,i,1);
  touch();renderAll();
 });
-$('addCat').onclick=function(){
+$('addCat').onclick=addCat;
+$('newCat').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addCat()}});
+function addCat(){
  var v=$('newCat').value.trim();
  if(!v){alert('Введите название категории');return}
  cats.push({k:'c'+Date.now().toString(36),t:v.slice(0,40)});
  $('newCat').value='';touch();renderAll();
-};
+}
 
-function onItemEdit(e){var r=e.target.closest('.vr');if(!r||!e.target.dataset.k)return;items[+r.dataset.i][e.target.dataset.k]=e.target.value;touch()}
-$('rows').addEventListener('input',onItemEdit);
-$('rows').addEventListener('change',onItemEdit);
+/* фильтр */
+$('filters').addEventListener('click',function(e){var b=e.target.closest('[data-f]');if(!b)return;filter=b.dataset.f;renderAll()});
+
+/* видео */
+function editItem(e){var r=e.target.closest('.vrow');if(!r||!e.target.dataset.k)return;items[+r.dataset.i][e.target.dataset.k]=e.target.value;touch()}
+$('rows').addEventListener('input',editItem);
+$('rows').addEventListener('change',function(e){editItem(e);renderAll()});
 $('rows').addEventListener('click',function(e){
- var b=e.target.closest('button');if(!b)return;
- var i=+b.closest('.vr').dataset.i,a=b.dataset.a;
+ var b=e.target.closest('button');if(!b||b.disabled)return;
+ var i=+b.closest('.vrow').dataset.i,a=b.dataset.a;
  if(a==='del'){if(!confirm('Удалить «'+(items[i].t||'без названия')+'»?'))return;items.splice(i,1)}
  else if(a==='up')move(items,i,-1);
  else if(a==='down')move(items,i,1);
- touch();renderItems();
+ touch();renderAll();
 });
 $('addVid').onclick=function(){
- if(!cats.length){alert('Сначала добавьте категорию');return}
- items.unshift({t:'',cat:cats[0].k,u:''});
- touch();renderItems();
- var f=document.querySelector('.vr [data-k="t"]');if(f)f.focus();
+ if(!cats.length){alert('Сначала добавьте категорию слева');return}
+ items.unshift({t:'',sub:'',cat:filter||cats[0].k,u:''});
+ touch();renderAll();
+ var f=document.querySelector('.vrow [data-k="t"]');if(f)f.focus();
 };
 
+/* сохранение */
 $('save').onclick=function(){
- say('Сохраняю...',true);
- api({items:items,cats:cats}).then(function(r){dirty=false;say('Сохранено: '+r.items+' видео, '+r.cats+' категорий',true)}).catch(function(e){say(e.message,false)});
+ var p=problems();
+ if(p.length&&!confirm('Есть проблемы ('+p.length+'). Сохранить всё равно? Строки с ошибкой будут сохранены как есть.'))return;
+ $('msg').className='';$('msg').textContent='Сохраняю...';
+ api({items:items,cats:cats}).then(function(r){
+  dirty=false;var d=new Date();lastSave=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+  $('msg').className='ok';$('msg').textContent='Сохранено: '+r.items+' видео, '+r.cats+' категорий';status();
+ }).catch(function(e){$('msg').className='bad';$('msg').textContent=e.message});
 };
+window.addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue=''}});
 
-function show(){$('login').hidden=true;$('app').hidden=false}
-function load(){return fetch('/api/items',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){items=d.items||[];cats=d.cats||[];renderAll();show()})}
+/* Навигашка в редакторе */
+(function(){
+ var char=$('nvChar'),bub=$('nvBub'),txt=$('nvTxt'),acts=$('nvActs');
+ function show(t,list){txt.textContent=t;acts.innerHTML='';(list||[]).forEach(function(x){var b=document.createElement('button');b.type='button';b.className='nv-btn';b.textContent=x.label;b.onclick=x.fn;acts.appendChild(b)});bub.hidden=false;char.setAttribute('aria-expanded','true')}
+ function hide(){bub.hidden=true;char.setAttribute('aria-expanded','false')}
+ function back(){return {label:'Назад',fn:menu}}
+ function check(){
+  var p=problems();
+  if(!p.length){show('Проблем нет. Видео: '+items.length+', категорий: '+cats.length+'.',[back()]);return}
+  show('Нашёл проблемы ('+p.length+'):\n'+p.slice(0,6).map(function(x){return '• '+x.text}).join('\n')+(p.length>6?'\n…и ещё '+(p.length-6):'')+'\n\nОни подсвечены красным в списке.',[back()]);
+ }
+ function howto(){show('Видео добавляется кнопкой «+ Видео». Категория выбирается из списка. Порядок влияет на главную: первое видео показывается как «новое». Чтобы видеть только одну категорию, нажмите её в фильтре.',[back()])}
+ function sub(){show('Подзаголовок — дополнительная информация к названию, например «1 серия» или «28 мин». На сайте он выводится под названием, а в поиске тоже учитывается.',[back()])}
+ function cat(){show('Категории можно переименовывать, менять порядок и добавлять. Категорию с видео удалить нельзя: сначала перенесите видео.',[back()])}
+ function menu(){
+  var p=problems();
+  show(p.length?'Привет! Нашёл проблем: '+p.length+'. Проверим?':'Привет! Я Навигашка. Видео: '+items.length+', категорий: '+cats.length+'. Чем помочь?',[
+   {label:'Проверить',fn:check},{label:'Как добавить видео',fn:howto},{label:'Подзаголовки',fn:sub},{label:'Категории',fn:cat}]);
+ }
+ char.onclick=function(){bub.hidden?menu():hide()};
+ $('nvClose').onclick=hide;
+ document.addEventListener('keydown',function(e){if(e.key==='Escape')hide()});
+ window.nvMenu=menu;
+})();
+
+/* вход */
+function show2(){$('login').hidden=true;$('app').hidden=false}
+function load(){return fetch('/api/items',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){items=d.items||[];cats=d.cats||[];renderAll();show2();setTimeout(function(){if(!sessionStorage.getItem('nvSeenAdmin')){sessionStorage.setItem('nvSeenAdmin','1');window.nvMenu()}},400)})}
 $('lf').onsubmit=function(e){
  e.preventDefault();pw=$('pw').value;$('lmsg').textContent='Проверяю...';
  api({check:true}).then(function(){sessionStorage.setItem('pw',pw);return load()}).catch(function(err){$('lmsg').textContent=err.message;$('lmsg').className='mono bad'});
 };
-window.addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue=''}});
-if(pw){api({check:true}).then(load).catch(function(){sessionStorage.removeItem('pw')})}
-</script></body></html>
+$('login').hidden=false;
+if(pw){api({check:true}).then(load).catch(function(){sessionStorage.removeItem('pw');$('login').hidden=false})}
+</script>
+</body></html>

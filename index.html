@@ -62,6 +62,7 @@ button,input{font:inherit}
 .body{padding:14px 16px 16px;display:grid;gap:6px}
 .cat{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:.04em;text-transform:uppercase}
 .title{font-size:16px;font-weight:700;line-height:1.3}
+.sub{font-size:13px;color:var(--mute);line-height:1.35}
 .empty{grid-column:1/-1;padding:28px 18px;text-align:center}
 
 footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:4px 2px}
@@ -87,7 +88,7 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 
-.nv-char{position:fixed;right:14px;bottom:14px;z-index:40;width:76px;height:76px;padding:0;border:0;background:none;cursor:pointer;animation:nvbob 3s ease-in-out infinite}
+.nv-char{position:fixed;left:14px;right:auto;bottom:14px;z-index:40;width:76px;height:76px;padding:0;border:0;background:none;cursor:pointer;animation:nvbob 3s ease-in-out infinite}
 .nv-char:focus-visible{outline:3px solid var(--acc);outline-offset:4px;border-radius:50%}
 .nv-svg{width:76px;height:76px;overflow:visible;display:block}
 .nv-svg .nv-body,.nv-svg .nv-ant{fill:var(--acc)}
@@ -96,9 +97,9 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
 .nv-svg .nv-eye{fill:var(--acc);transform-box:fill-box;transform-origin:center;animation:nvblink 4s infinite}
 .nv-svg .nv-mouth{fill:#0e0e0d}
 .nv-char:hover .nv-body{fill:#ff6a2b}
-.nv-bub{position:fixed;right:14px;bottom:100px;z-index:40;width:min(300px,calc(100vw - 28px));background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.nv-bub{position:fixed;left:14px;right:auto;bottom:100px;z-index:40;width:min(300px,calc(100vw - 28px));background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
 .nv-bub[hidden]{display:none}
-.nv-bub::after{content:"";position:absolute;right:38px;bottom:-7px;width:12px;height:12px;background:var(--panel);border-right:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg)}
+.nv-bub::after{content:"";position:absolute;left:38px;right:auto;bottom:-7px;width:12px;height:12px;background:var(--panel);border-right:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg)}
 .nv-who{display:block;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--acc);letter-spacing:.06em;margin-bottom:6px}
 .nv-txt{font-size:14px;line-height:1.45;padding-right:20px}
 .nv-acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
@@ -109,7 +110,7 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
 .nv-empty b{font-size:18px}
 @keyframes nvblink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
 @keyframes nvbob{50%{transform:translateY(-6px)}}
-@media(max-width:480px){.nv-bub{right:8px;left:8px;width:auto;bottom:96px}.nv-char{right:8px}}
+@media(max-width:480px){.nv-bub{right:8px;left:8px;width:auto;bottom:96px}.nv-char{left:8px}}
 @media(prefers-reduced-motion:reduce){.nv-char,.nv-svg .nv-eye{animation:none}}
 </style></head>
 <body>
@@ -168,7 +169,7 @@ function embed(u){
 function openPlayer(i){
  var x=ITEMS[i],e=x&&embed(x.u);
  if(!e){window.open(x.u,'_blank','noopener');return}
- $('mTitle').textContent=x.t;$('mOpen').href=x.u;
+ $('mTitle').textContent=x.t+(x.sub?' — '+x.sub:'');$('mOpen').href=x.u;
  $('mv').className='mv'+(e.tg?' tg':'');
  $('mv').innerHTML=e.t==='v'?'<video src="'+esc(e.s)+'" controls autoplay playsinline></video>':'<iframe src="'+esc(e.s)+'" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
  $('modal').hidden=false;document.body.style.overflow='hidden';$('mClose').focus();
@@ -187,11 +188,11 @@ function render(){
  var rows=[];
  ITEMS.forEach(function(it,i){
   if(showFeat&&i===0)return;
-  if((!cur||it.cat===cur.k)&&(!q||it.t.toLowerCase().indexOf(q)>-1))rows.push(i);
+  if((!cur||it.cat===cur.k)&&(!q||(it.t+' '+(it.sub||'')).toLowerCase().indexOf(q)>-1))rows.push(i);
  });
  $('ttl').textContent=cur?cur.t:(q?'Результаты поиска':'Все видео');
  $('cnt').textContent=STATE==='ok'?rows.length+' шт.':'';
- $('grid').innerHTML=STATE==='load'?'<p class="empty mono">Загрузка...</p>':STATE==='err'?'<p class="empty mono">Не удалось загрузить каталог. Обновите страницу.</p>':rows.length?rows.map(function(i){var it=ITEMS[i];return '<a class="card" href="'+esc(it.u)+'" data-i="'+i+'" target="_blank" rel="noopener"><span class="art"><span class="play">▶</span></span><span class="body"><span class="cat">'+esc(catName(it.cat))+'</span><span class="title">'+esc(it.t)+'</span></span></a>'}).join(''):(q?nvEmpty(q):'<p class="empty mono">В этом разделе пока пусто.</p>');
+ $('grid').innerHTML=STATE==='load'?'<p class="empty mono">Загрузка...</p>':STATE==='err'?'<p class="empty mono">Не удалось загрузить каталог. Обновите страницу.</p>':rows.length?rows.map(function(i){var it=ITEMS[i];return '<a class="card" href="'+esc(it.u)+'" data-i="'+i+'" target="_blank" rel="noopener"><span class="art"><span class="play">▶</span></span><span class="body"><span class="cat">'+esc(catName(it.cat))+'</span><span class="title">'+esc(it.t)+'</span>'+(it.sub?'<span class="sub">'+esc(it.sub)+'</span>':'')+'</span></a>'}).join(''):(q?nvEmpty(q):'<p class="empty mono">В этом разделе пока пусто.</p>');
  document.title=(cur?cur.t+' · ':'')+'Каталог контента MMP';
 }
 $('grid').addEventListener('click',function(e){if(e.target.closest('[data-nv="clear"]')){$('q').value='';render();return}var a=e.target.closest('.card');if(!a||e.ctrlKey||e.metaKey)return;e.preventDefault();handleOpen(+a.dataset.i)});

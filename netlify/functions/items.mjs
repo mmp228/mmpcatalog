@@ -47,7 +47,7 @@ function cleanItems(list, keys) {
     if (!t) throw new Error(`Видео ${row}: нет названия`);
     if (!/^https?:\/\//i.test(u)) throw new Error(`Видео ${row}: ссылка должна начинаться с http:// или https://`);
     if (!keys.includes(x.cat)) throw new Error(`Видео ${row}: неизвестная категория`);
-    return { t: t.slice(0, 120), cat: x.cat, u: u.slice(0, 500) };
+    return { t: t.slice(0, 120), sub: String(x.sub ?? "").trim().slice(0, 160), cat: x.cat, u: u.slice(0, 500) };
   });
 }
 

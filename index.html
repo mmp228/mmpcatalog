@@ -85,6 +85,32 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
  .play{width:42px;height:42px}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+
+.nv-char{position:fixed;right:14px;bottom:14px;z-index:40;width:76px;height:76px;padding:0;border:0;background:none;cursor:pointer;animation:nvbob 3s ease-in-out infinite}
+.nv-char:focus-visible{outline:3px solid var(--acc);outline-offset:4px;border-radius:50%}
+.nv-svg{width:76px;height:76px;overflow:visible;display:block}
+.nv-svg .nv-body,.nv-svg .nv-ant{fill:var(--acc)}
+.nv-svg .nv-stick{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.nv-svg .nv-screen{fill:#0e0e0d}
+.nv-svg .nv-eye{fill:var(--acc);transform-box:fill-box;transform-origin:center;animation:nvblink 4s infinite}
+.nv-svg .nv-mouth{fill:#0e0e0d}
+.nv-char:hover .nv-body{fill:#ff6a2b}
+.nv-bub{position:fixed;right:14px;bottom:100px;z-index:40;width:min(300px,calc(100vw - 28px));background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.nv-bub[hidden]{display:none}
+.nv-bub::after{content:"";position:absolute;right:38px;bottom:-7px;width:12px;height:12px;background:var(--panel);border-right:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg)}
+.nv-who{display:block;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--acc);letter-spacing:.06em;margin-bottom:6px}
+.nv-txt{font-size:14px;line-height:1.45;padding-right:20px}
+.nv-acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.nv-close{position:absolute;top:8px;right:8px;background:none;border:0;color:var(--mute);font-size:18px;cursor:pointer;line-height:1;padding:4px}
+.nv-btn{font-family:var(--mono);font-size:12px;font-weight:700;border:1px solid var(--ink);background:none;color:var(--ink);border-radius:999px;padding:7px 12px;cursor:pointer}
+.nv-btn:hover{background:var(--ink);color:var(--bg)}
+.nv-empty{display:grid;justify-items:center;gap:8px;padding:24px 16px;text-align:center}
+.nv-empty b{font-size:18px}
+@keyframes nvblink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+@keyframes nvbob{50%{transform:translateY(-6px)}}
+@media(max-width:480px){.nv-bub{right:8px;left:8px;width:auto;bottom:96px}.nv-char{right:8px}}
+@media(prefers-reduced-motion:reduce){.nv-char,.nv-svg .nv-eye{animation:none}}
 </style></head>
 <body>
 <div class="wrap">
@@ -165,14 +191,59 @@ function render(){
  });
  $('ttl').textContent=cur?cur.t:(q?'Результаты поиска':'Все видео');
  $('cnt').textContent=STATE==='ok'?rows.length+' шт.':'';
- $('grid').innerHTML=STATE==='load'?'<p class="empty mono">Загрузка...</p>':STATE==='err'?'<p class="empty mono">Не удалось загрузить каталог. Обновите страницу.</p>':rows.length?rows.map(function(i){var it=ITEMS[i];return '<a class="card" href="'+esc(it.u)+'" data-i="'+i+'" target="_blank" rel="noopener"><span class="art"><span class="play">▶</span></span><span class="body"><span class="cat">'+esc(catName(it.cat))+'</span><span class="title">'+esc(it.t)+'</span></span></a>'}).join(''):'<p class="empty mono">'+(q?'Ничего не найдено.':'В этом разделе пока пусто.')+'</p>';
+ $('grid').innerHTML=STATE==='load'?'<p class="empty mono">Загрузка...</p>':STATE==='err'?'<p class="empty mono">Не удалось загрузить каталог. Обновите страницу.</p>':rows.length?rows.map(function(i){var it=ITEMS[i];return '<a class="card" href="'+esc(it.u)+'" data-i="'+i+'" target="_blank" rel="noopener"><span class="art"><span class="play">▶</span></span><span class="body"><span class="cat">'+esc(catName(it.cat))+'</span><span class="title">'+esc(it.t)+'</span></span></a>'}).join(''):(q?nvEmpty(q):'<p class="empty mono">В этом разделе пока пусто.</p>');
  document.title=(cur?cur.t+' · ':'')+'Каталог контента MMP';
 }
-$('grid').addEventListener('click',function(e){var a=e.target.closest('.card');if(!a||e.ctrlKey||e.metaKey)return;e.preventDefault();openPlayer(+a.dataset.i)});
-$('fBtn').onclick=function(){openPlayer(0)};
+$('grid').addEventListener('click',function(e){if(e.target.closest('[data-nv="clear"]')){$('q').value='';render();return}var a=e.target.closest('.card');if(!a||e.ctrlKey||e.metaKey)return;e.preventDefault();handleOpen(+a.dataset.i)});
+$('fBtn').onclick=function(){handleOpen(0)};
 $('q').addEventListener('input',render);
 window.addEventListener('hashchange',render);
 render();
 fetch('/api/items',{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){ITEMS=d.items||[];CATS=d.cats||[];STATE='ok';render()}).catch(function(){STATE='err';render()});
+</script>
+<button class="nv-char" id="nvChar" type="button" aria-expanded="false" aria-label="Навигашка: помощь по каталогу"><svg class="nv-svg" viewBox="0 0 64 64" aria-hidden="true"><line class="nv-stick" x1="32" y1="9" x2="32" y2="15"/><circle class="nv-ant" cx="32" cy="6" r="4"/><rect class="nv-body" x="11" y="14" width="42" height="40" rx="11"/><rect class="nv-screen" x="19" y="24" width="26" height="17" rx="5"/><rect class="nv-eye" x="24" y="29" width="5" height="7" rx="1.5"/><rect class="nv-eye" x="35" y="29" width="5" height="7" rx="1.5"/><rect class="nv-mouth" x="27" y="46" width="10" height="3" rx="1.5"/></svg></button>
+<div class="nv-bub" id="nvBub" hidden role="status"><span class="nv-who">НАВИГАШКА</span><button class="nv-close" id="nvClose" type="button" aria-label="Закрыть">×</button><p class="nv-txt" id="nvTxt"></p><div class="nv-acts" id="nvActs"></div></div>
+<script>
+(function(){
+ var SVG='<svg class="nv-svg" viewBox="0 0 64 64" aria-hidden="true"><line class="nv-stick" x1="32" y1="9" x2="32" y2="15"/><circle class="nv-ant" cx="32" cy="6" r="4"/><rect class="nv-body" x="11" y="14" width="42" height="40" rx="11"/><rect class="nv-screen" x="19" y="24" width="26" height="17" rx="5"/><rect class="nv-eye" x="24" y="29" width="5" height="7" rx="1.5"/><rect class="nv-eye" x="35" y="29" width="5" height="7" rx="1.5"/><rect class="nv-mouth" x="27" y="46" width="10" height="3" rx="1.5"/></svg>';
+ var char=document.getElementById('nvChar'),bub=document.getElementById('nvBub'),txt=document.getElementById('nvTxt'),acts=document.getElementById('nvActs');
+ var timer=null;
+ function show(t,list){
+  clearTimeout(timer);
+  txt.textContent=t;acts.innerHTML='';
+  (list||[]).forEach(function(x){var b=document.createElement('button');b.type='button';b.className='nv-btn';b.textContent=x.label;b.onclick=x.fn;acts.appendChild(b)});
+  bub.hidden=false;char.setAttribute('aria-expanded','true');
+ }
+ function hide(){bub.hidden=true;char.setAttribute('aria-expanded','false')}
+ function back(){return {label:'Назад',fn:menu}}
+ function menu(){show('Привет! Я Навигашка. Помогу найти видео, подскажу разделы и объясню, как смотреть.',[
+  {label:'Найти видео',fn:find},{label:'Разделы',fn:sections},{label:'Что нового?',fn:fresh},{label:'Как смотреть?',fn:how}])}
+ function find(){show('Введите название в поле поиска над каталогом.',[back()]);document.getElementById('q').focus()}
+ function sections(){
+  var a=[{label:'Все видео',fn:function(){location.hash='';show('Открыл все видео.',[back()])}}];
+  CATS.forEach(function(c){a.push({label:c.t,fn:function(){location.hash=c.k;show('Открыл раздел «'+c.t+'».',[back()])}})});
+  a.push(back());show('Вот разделы:',a);
+ }
+ function fresh(){
+  if(!ITEMS.length){show('Пока в каталоге ничего нет.',[back()]);return}
+  show('Последнее добавленное: «'+ITEMS[0].t+'» ('+catName(ITEMS[0].cat)+').',[{label:'Смотреть',fn:function(){handleOpen(0)}},back()]);
+ }
+ function how(){show('Видео с YouTube, Vimeo, Kinescope и Google Drive открываются прямо на сайте. Ссылки из Telegram часто показываются не полностью, поэтому в таком случае я предложу смотреть здесь или открыть пост в Telegram.',[back()])}
+ function telegram(i){
+  var it=ITEMS[i];
+  show('«'+it.t+'» — это видео из Telegram. Встроенный плеер там часто не показывает ролик целиком, поэтому смотреть здесь может быть неудобно. Что выберете?',[
+   {label:'Смотреть на сайте',fn:function(){hide();openPlayer(i)}},
+   {label:'Открыть в Telegram',fn:function(){window.open(it.u,'_blank','noopener')}}]);
+ }
+ window.isTg=function(u){return /^https?:\/\/t\.me\//i.test(u||'')};
+ window.handleOpen=function(i){var it=ITEMS[i];if(!it)return;if(isTg(it.u))telegram(i);else openPlayer(i)};
+ window.nvEmpty=function(q){return '<div class="empty nv-empty">'+SVG+'<b>Навигашка ничего не нашёл</b><p class="mono">по запросу «'+esc(q)+'»</p><button class="btnp" type="button" data-nv="clear">Сбросить поиск</button></div>'};
+ char.onclick=function(){bub.hidden?menu():hide()};
+ document.getElementById('nvClose').onclick=hide;
+ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!bub.hidden&&$('modal').hidden)hide()});
+ setTimeout(function(){
+  if(!sessionStorage.getItem('nvSeen')){sessionStorage.setItem('nvSeen','1');menu();timer=setTimeout(hide,12000)}
+ },1500);
+})();
 </script>
 </body></html>

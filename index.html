@@ -212,8 +212,8 @@ function cover(it){
 function embed(u){
  var m;
  if(m=ytId(u))return{t:'f',yt:1,s:'https://www.youtube-nocookie.com/embed/'+m+'?autoplay=1&rel=0&enablejsapi=1'};
- if(m=u.match(/vimeo\.com\/(?:video\/)?(\d+)/))return{t:'f',vim:1,s:'https://player.vimeo.com/video/'+m[1]+'?autoplay=1'};
- if(m=u.match(/kinescope\.io\/(?:embed\/|watch\/)?([A-Za-z0-9]{10,})/))return{t:'f',kin:1,s:'https://kinescope.io/embed/'+m[1]+'?autoplay=1'};
+ if(m=u.match(/vimeo\.com\/(?:video\/)?(\d+)/))return{t:'f',vim:1,s:'https://player.vimeo.com/video/'+m[1]+'?autoplay=1&api=1'};
+ if(m=u.match(/kinescope\.io\/(?:embed\/|watch\/)?([A-Za-z0-9]{10,})/))return{t:'k',kin:1,s:m[1]};
  if(m=u.match(/^https?:\/\/t\.me\/([A-Za-z][A-Za-z0-9_]{3,})\/(\d+)/))return{t:'f',tg:1,s:'https://t.me/'+m[1]+'/'+m[2]+'?embed=1&mode=tme'};
  if(m=driveId(u))return{t:'f',s:'https://drive.google.com/file/d/'+m+'/preview'};
  if(/\.(mp4|webm|mov)(\?|$)/i.test(u))return{t:'v',s:u};
@@ -272,10 +272,33 @@ function playCur(){
  if(!e){window.open(it.u,'_blank','noopener');return}
  var mv=$('wv');
  mv.className='wv'+(e.tg?' tg':'');
- mv.innerHTML=e.t==='v'?'<video src="'+esc(e.s)+'" controls autoplay playsinline></video>':'<iframe id="wf" src="'+esc(e.s)+'" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
- if(e.t==='v')mv.querySelector('video').onended=next;
- if(e.yt)$('wf').onload=function(){this.contentWindow.postMessage(JSON.stringify({event:'listening'}),'*')};
+ if(e.t==='k'){
+  mv.innerHTML='<div id="kpl" style="width:100%;height:100%"></div>';
+  kinePlay(e.s);
+ } else {
+  mv.innerHTML=e.t==='v'?'<video src="'+esc(e.s)+'" controls autoplay playsinline></video>':'<iframe id="wf" src="'+esc(e.s)+'" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
+  if(e.t==='v')mv.querySelector('video').onended=next;
+  if(e.yt||e.vim)$('wf').onload=function(){
+   if(e.yt)this.contentWindow.postMessage(JSON.stringify({event:'listening'}),'*');
+   if(e.vim)this.contentWindow.postMessage(JSON.stringify({method:'addEventListener',value:'finish'}),'https://player.vimeo.com');
+  };
+ }
  if(!isAuto(e))nvShow('Это видео не переключается само и не запускается автоматически. Нажмите ▶ в плеере. Автопереход работает для YouTube, Vimeo, Kinescope и mp4.',[{label:'Понятно',fn:nvHide}]);
+}
+function kinePlay(id){
+ var url='https://kinescope.io/'+id;
+ function go(f){
+  f.create('kpl',{url:url,behavior:{autoPlay:true}}).then(function(p){
+   p.on(p.Events.Ended,next);
+  }).catch(function(){
+   nvShow('Не удалось открыть видео Kinescope. Проверьте, разрешён ли показ этого видео на сайте в настройках Kinescope.',[{label:'Понятно',fn:nvHide}]);
+  });
+ }
+ if(window.kFactory){go(window.kFactory);return}
+ window.onKinescopeIframeAPIReady=function(f){window.kFactory=f;go(f)};
+ if(!document.getElementById('kscript')){
+  var sc=document.createElement('script');sc.id='kscript';sc.src='https://player.kinescope.io/latest/iframe.player.js';document.head.appendChild(sc);
+ }
 }
 function next(){
  if(PI<PL.length-1){PI++;playCur();return}
@@ -292,8 +315,14 @@ $('plist').addEventListener('keydown',function(e){if(e.key!=='Enter')return;var 
 $('wNext').onclick=next;
 $('wClose').onclick=closeWatch;
 window.addEventListener('message',function(e){
- if(!/youtube/.test(e.origin)||typeof e.data!=='string')return;
- try{var d=JSON.parse(e.data);if(d.event==='infoDelivery'&&d.info&&d.info.playerState===0&&!$('watch').hidden)next()}catch(_){}
+ if($('watch').hidden)return;
+ if(/youtube/.test(e.origin)&&typeof e.data==='string'){
+  try{var y=JSON.parse(e.data);if(y.event==='infoDelivery'&&y.info&&y.info.playerState===0)next()}catch(_){}
+  return;
+ }
+ if(e.origin==='https://player.vimeo.com'){
+  try{var v=typeof e.data==='string'?JSON.parse(e.data):e.data;if(v&&v.event==='finish')next()}catch(_){}
+ }
 });
 
 /* навигация по событиям */

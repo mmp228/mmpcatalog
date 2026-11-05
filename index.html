@@ -106,8 +106,8 @@ button,input,select{font:inherit;color:inherit}
 footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:4px 2px}
 
 /* зона внизу: Навигашка и отступ от плашки Netlify */
-.dock{position:fixed;left:0;right:0;bottom:0;z-index:80;height:96px;display:flex;align-items:flex-end;padding:0 clamp(12px,3vw,32px) 10px;padding-right:220px;pointer-events:none;background:linear-gradient(180deg,rgba(14,14,13,0),var(--bg) 60%)}
-.aero .dock{background:linear-gradient(180deg,rgba(143,208,245,0),rgba(10,47,94,.6) 60%)}
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:80;height:96px;display:flex;align-items:center;padding:0 clamp(12px,3vw,32px);padding-right:220px;pointer-events:auto;background:var(--bg);border-top:1px solid var(--line)}
+.aero .dock{background:#0f4a80;border-top:1px solid #fff}
 .dock .nv-char{pointer-events:auto}
 @media(max-width:600px){.dock{padding-right:160px}}
 
@@ -699,6 +699,7 @@ window.addEventListener('message',function(e){
 var nvTimer=null;
 function nvShow(t,list){
  clearTimeout(nvTimer);
+ nvTimer=setTimeout(nvHide,(list&&list.length)?12000:9000);
  $('nvTxt').textContent=t;
  var acts=$('nvActs');acts.innerHTML='';
  (list||[]).forEach(function(x){var b=document.createElement('button');b.type='button';b.className='nv-btn';b.textContent=x.label;b.onclick=x.fn;acts.appendChild(b)});
@@ -735,6 +736,9 @@ function nvEmpty(q){
 }
 $('nvChar').onclick=function(){$('nvBub').hidden?nvMenu():nvHide()};
 $('nvClose').onclick=nvHide;
+$('nvBub').addEventListener('mouseenter',function(){clearTimeout(nvTimer)});
+$('nvBub').addEventListener('mouseleave',function(){clearTimeout(nvTimer);nvTimer=setTimeout(nvHide,4000)});
+$('nvBub').addEventListener('focusin',function(){clearTimeout(nvTimer)});
 
 /* запуск */
 $('fBtn').onclick=function(){handleOpen(+this.dataset.i||0)};
@@ -744,7 +748,7 @@ applyTheme();
 render();
 fetch('/api/items',{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){
  ITEMS=d.items||[];CATS=d.cats||[];STATE='ok';render();
- if(!sessionStorage.getItem('nvSeen')){sessionStorage.setItem('nvSeen','1');setTimeout(function(){if($('watch').hidden){nvMenu();nvTimer=setTimeout(nvHide,12000)}},1500)}
+ if(!sessionStorage.getItem('nvSeen')){sessionStorage.setItem('nvSeen','1');setTimeout(function(){if($('watch').hidden){nvMenu()}},1500)}
 }).catch(function(){STATE='err';render()});
 </script>
 </body></html>

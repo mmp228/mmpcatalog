@@ -16,18 +16,17 @@ button,input,select{font:inherit;color:var(--ink)}
 .box{background:var(--panel);border:1px solid var(--line);border-radius:8px}
 .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;position:sticky;top:0;z-index:5}
 .top h1{font-size:16px;font-weight:800}
-.top .stat{font-family:var(--mono);font-size:12px;color:var(--mute);margin-top:2px}
+.stat{font-family:var(--mono);font-size:12px;color:var(--mute);margin-top:2px}
 .acts{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .btn{font-family:var(--mono);font-size:12px;font-weight:700;border:1px solid var(--line);background:var(--panel2);padding:7px 11px;border-radius:5px;cursor:pointer;text-decoration:none;color:var(--ink);white-space:nowrap}
 .btn:hover{border-color:var(--ink)}
-.btn:disabled{opacity:.35;cursor:not-allowed;border-color:var(--line)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
 .btn.pri{background:var(--acc);border-color:var(--acc);color:#fff}
-.btn.pri:hover{filter:brightness(1.1)}
 .btn.sm{padding:5px 9px}
-#msg{font-family:var(--mono);font-size:12px}.ok{color:var(--ok)}.bad{color:var(--bad)}
+#msg{font-family:var(--mono);font-size:12px;max-width:520px}.ok{color:var(--ok)}.bad{color:var(--bad)}
 .main{display:grid;grid-template-columns:260px 1fr;gap:10px;align-items:start}
 .sec{padding:10px 12px}
-.sec h2{font-size:13px;font-weight:800;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.sec h2{font-size:13px;font-weight:800;display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
 .list{display:grid;gap:4px}
 .item{display:grid;gap:6px;align-items:center;padding:6px;border:1px solid transparent;border-radius:6px;background:var(--panel2)}
 .item.bad-row{border-color:var(--bad)}
@@ -38,28 +37,33 @@ button,input,select{font:inherit;color:var(--ink)}
 .add input{flex:1;min-width:0}
 input,select{background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:6px 8px;width:100%;min-width:0;font-size:14px}
 input::placeholder{color:#5d5d57}
-.filters{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.filters{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
+.filters .lab{font-family:var(--mono);font-size:11px;color:var(--mute);margin-right:2px}
 .chip{font-family:var(--mono);font-size:12px;border:1px solid var(--line);background:none;border-radius:999px;padding:5px 11px;cursor:pointer}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.vhead,.vrow{display:grid;grid-template-columns:1.4fr 1.1fr 150px 1.3fr 1.2fr 96px;gap:6px;align-items:center}
-.vhead{font-family:var(--mono);font-size:11px;color:var(--mute);padding:0 6px 4px}
-.vrow{padding:6px;border:1px solid transparent;border-bottom-color:var(--line);border-radius:6px}
+.vrow{display:grid;grid-template-columns:82px 1.3fr 1fr 150px 1.5fr 1.2fr 96px;gap:6px;align-items:center;padding:7px;border:1px solid transparent;border-bottom-color:var(--line);border-radius:6px}
 .vrow:hover{background:var(--panel2)}
 .vrow.bad-row{border-color:var(--bad);background:rgba(255,107,107,.06)}
+.vrow.art{grid-template-columns:82px 1.3fr 150px 1.6fr auto}
+.pill{font-family:var(--mono);font-size:11px;font-weight:700;border-radius:999px;padding:4px 8px;text-align:center;white-space:nowrap}
+.pill.vid{border:1px solid var(--mute);color:var(--mute)}
+.pill.art{background:var(--acc);color:#fff;border:1px solid var(--acc)}
 .vrow .ctl{display:flex;gap:4px;justify-content:flex-end}
-.vrow .ctl button{padding:5px 8px;font-size:12px;border:1px solid var(--line);background:var(--panel2);border-radius:4px;cursor:pointer}
-.vrow .ctl button:hover:not(:disabled){border-color:var(--ink)}
-.vrow .ctl button:disabled{opacity:.3;cursor:not-allowed}
+.astat{grid-column:1/-1;font-size:13px;padding:2px 2px 4px 88px;line-height:1.5}
+.astat details{margin-top:6px}
+.astat summary{cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--mute)}
+.prev{margin-top:8px;max-height:260px;overflow:auto;border:1px solid var(--line);border-radius:6px;padding:10px 12px;background:var(--bg);font-size:14px;line-height:1.6;display:grid;gap:8px}
+.prev img{max-width:100%;border-radius:6px}
+.prev blockquote{border-left:3px solid var(--acc);padding-left:10px;color:var(--mute)}
 .empty{padding:20px;text-align:center}
 .login{max-width:420px;margin:12vh auto 0;padding:18px}
 .login form{display:flex;gap:8px;margin-top:10px}
 .login input{flex:1}
 @media(max-width:900px){
  .main{grid-template-columns:1fr}
- .vhead{display:none}
- .vrow{grid-template-columns:1fr 1fr}
- .vrow>input:nth-child(1),.vrow>input:nth-child(4),.vrow>input:nth-child(5){grid-column:1/-1}
- .vrow .ctl{grid-column:1/-1;justify-content:flex-start}
+ .vrow,.vrow.art{grid-template-columns:1fr 1fr}
+ .vrow>.pill,.vrow>.ctl{grid-column:1/-1}
+ .astat{padding-left:2px}
 }
 /* Навигашка */
 .nv-char{position:fixed;left:14px;bottom:14px;z-index:40;width:64px;height:64px;padding:0;border:0;background:none;cursor:pointer;animation:nvbob 3s ease-in-out infinite}
@@ -70,7 +74,7 @@ input::placeholder{color:#5d5d57}
 .nv-svg .nv-screen{fill:#0e0e0d}
 .nv-svg .nv-eye{fill:var(--acc);transform-box:fill-box;transform-origin:center;animation:nvblink 4s infinite}
 .nv-svg .nv-mouth{fill:#0e0e0d}
-.nv-bub{position:fixed;left:12px;bottom:88px;z-index:40;width:min(340px,calc(100vw - 24px));background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 12px 10px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.nv-bub{position:fixed;left:12px;bottom:88px;z-index:40;width:min(360px,calc(100vw - 24px));background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 12px 10px;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:nvPop .18s ease-out both}
 .nv-bub::after{content:"";position:absolute;left:30px;bottom:-7px;width:12px;height:12px;background:var(--panel);border-right:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg)}
 .nv-who{display:block;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--acc);letter-spacing:.06em;margin-bottom:5px}
 .nv-txt{font-size:13px;line-height:1.5;padding-right:18px;white-space:pre-line}
@@ -78,6 +82,7 @@ input::placeholder{color:#5d5d57}
 .nv-close{position:absolute;top:6px;right:8px;background:none;border:0;color:var(--mute);font-size:18px;cursor:pointer;line-height:1;padding:4px}
 .nv-btn{font-family:var(--mono);font-size:11px;font-weight:700;border:1px solid var(--ink);background:none;border-radius:999px;padding:6px 11px;cursor:pointer}
 .nv-btn:hover{background:var(--ink);color:var(--bg)}
+@keyframes nvPop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @keyframes nvblink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
 @keyframes nvbob{50%{transform:translateY(-5px)}}
 @media(prefers-reduced-motion:reduce){.nv-char,.nv-svg .nv-eye{animation:none}}
@@ -110,15 +115,22 @@ input::placeholder{color:#5d5d57}
    <h2>Категории <span class="mono" id="catTotal"></span></h2>
    <div class="list" id="cats"></div>
    <div class="add">
-    <input id="newCat" placeholder="Новая категория" maxlength="40">
+    <input id="newCat" placeholder="Новая категория" maxlength="40" aria-label="Новая категория">
     <button class="btn" id="addCat" type="button">+</button>
    </div>
   </section>
 
   <section class="box sec">
-   <h2>Видео <span class="acts"><button class="btn sm" id="fetchCov" type="button" title="Найти обложки по ссылкам Vimeo, Kinescope и Telegram">Обложки</button> <button class="btn sm" id="fetchArt" type="button" title="Загрузить текст статей из telegra.ph и постов Telegram">Статьи</button> <button class="btn pri sm" id="addVid" type="button">+ Видео</button></span></h2>
+   <h2>
+    <span>Каталог</span>
+    <span class="acts">
+     <button class="btn sm" id="fetchCov" type="button" title="Найти обложки для видео с Vimeo, Kinescope и Telegram">Обложки</button>
+     <button class="btn sm" id="addVid" type="button">+ Видео</button>
+     <button class="btn sm pri" id="addArt" type="button">+ Статья</button>
+    </span>
+   </h2>
+   <div class="filters" id="typeF"></div>
    <div class="filters" id="filters"></div>
-   <div class="vhead"><span>Название</span><span>Подзаголовок</span><span>Категория</span><span>Ссылка</span><span>Обложка</span><span></span></div>
    <div class="list" id="rows"></div>
    <p class="mono" id="hint" style="margin-top:8px"></p>
   </section>
@@ -137,56 +149,84 @@ input::placeholder{color:#5d5d57}
 
 <script>
 var $=function(i){return document.getElementById(i)};
-var pw=sessionStorage.getItem('pw')||'',items=[],cats=[],dirty=false,filter='',lastSave='';
+var pw=sessionStorage.getItem('pw')||'',items=[],cats=[],dirty=false,filter='',typeF='all',lastSave='',LOADING={};
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function api(body){return fetch('/api/items',{method:'POST',headers:{'content-type':'application/json','x-admin-password':pw},body:JSON.stringify(body)}).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||'Ошибка');return j})})}
-function catName(k){var c=cats.find(function(c){return c.k===k});return c?c.t:'—'}
+function isArt(x){return x.kind==='article'||!!x.body}
 function countIn(k){return items.filter(function(x){return x.cat===k}).length}
 function move(a,i,d){var j=i+d;if(j<0||j>=a.length)return;var t=a[i];a[i]=a[j];a[j]=t}
+function words(h){return (h||'').replace(/<[^>]+>/g,' ').trim().split(/\s+/).filter(Boolean).length}
+function msg(t,ok){$('msg').className=ok===true?'ok':(ok===false?'bad':'');$('msg').textContent=t}
 
-/* проверка данных: одно место, которое считает проблемы */
+/* проверка: одно место, которое считает проблемы */
 function problems(){
  var out=[];
  items.forEach(function(x,i){
-  var n=i+1;
-  if(!String(x.t||'').trim())out.push({i:i,text:'Видео '+n+': нет названия'});
-  if(!/^https?:\/\//i.test(String(x.u||'').trim()))out.push({i:i,text:'Видео '+n+'«'+(x.t||'без названия')+'»: нет ссылки или она не начинается с https://'});
-  if(!cats.some(function(c){return c.k===x.cat}))out.push({i:i,text:'Видео '+n+': не выбрана категория'});
+  var n=i+1,name=x.t||'без названия';
+  if(!String(x.t||'').trim())out.push({i:i,text:'Видео/статья '+n+': нет названия'});
+  if(!/^https?:\/\//i.test(String(x.u||'').trim()))out.push({i:i,text:(isArt(x)?'Статья':'Видео')+' '+n+' «'+name+'»: нет ссылки'});
+  if(isArt(x)&&!x.body)out.push({i:i,text:'Статья '+n+' «'+name+'»: текст не загружен, нажмите «Загрузить текст»'});
+  if(!cats.some(function(c){return c.k===x.cat}))out.push({i:i,text:'Строка '+n+': не выбрана категория'});
  });
  return out;
 }
 function status(){
- var p=problems();
- $('stat').textContent='видео: '+items.length+' · категорий: '+cats.length+(p.length?' · проблем: '+p.length:'')+(lastSave?' · сохранено в '+lastSave:'')+(dirty?' · есть несохранённые':'');
+ var p=problems(),v=items.filter(function(x){return !isArt(x)}).length,a=items.length-v;
+ $('stat').textContent='видео: '+v+' · статей: '+a+' · категорий: '+cats.length+(p.length?' · проблем: '+p.length:'')+(lastSave?' · сохранено в '+lastSave:'')+(dirty?' · есть несохранённые':'');
  $('catTotal').textContent=cats.length;
 }
 function touch(){dirty=true;$('msg').textContent='';status()}
 
 function renderCats(){
  $('cats').innerHTML=cats.length?cats.map(function(c,i){
-  return '<div class="item cat-row" data-i="'+i+'"><input data-k="t" value="'+esc(c.t)+'" maxlength="40" title="Переименовать"><span class="cnt" title="Видео в категории">'+countIn(c.k)+'</span><span class="acts"><button class="btn sm" data-a="up" title="Выше">↑</button><button class="btn sm" data-a="down" title="Ниже">↓</button><button class="btn sm" data-a="del" title="Удалить">✕</button></span></div>';
+  return '<div class="item cat-row" data-i="'+i+'"><input data-k="t" value="'+esc(c.t)+'" maxlength="40" title="Переименовать"><span class="cnt" title="Записей в категории">'+countIn(c.k)+'</span><span class="acts"><button class="btn sm" data-a="up" title="Выше">↑</button><button class="btn sm" data-a="down" title="Ниже">↓</button><button class="btn sm" data-a="del" title="Удалить">✕</button></span></div>';
  }).join(''):'<p class="mono">Категорий нет</p>';
 }
 function renderFilters(){
- $('filters').innerHTML='<button class="chip" type="button" data-f="" aria-pressed="'+(filter===''?'true':'false')+'">Все · '+items.length+'</button>'+
+ $('typeF').innerHTML='<span class="lab">тип:</span>'+
+  [['all','Все'],['video','Видео'],['article','Статьи']].map(function(t){return '<button class="chip" type="button" data-t="'+t[0]+'" aria-pressed="'+(typeF===t[0])+'">'+t[1]+'</button>'}).join('');
+ $('filters').innerHTML='<span class="lab">категория:</span><button class="chip" type="button" data-f="" aria-pressed="'+(filter===''?'true':'false')+'">Все</button>'+
   cats.map(function(c){return '<button class="chip" type="button" data-f="'+esc(c.k)+'" aria-pressed="'+(filter===c.k?'true':'false')+'">'+esc(c.t)+' · '+countIn(c.k)+'</button>'}).join('');
+}
+function catOpts(sel){return cats.map(function(c){return '<option value="'+esc(c.k)+'"'+(c.k===sel?' selected':'')+'>'+esc(c.t)+'</option>'}).join('')}
+function ctl(dis){var d=dis?' disabled title="Сбросьте фильтр, чтобы менять порядок"':'';return '<span class="ctl"><button class="btn sm" data-a="up"'+d+' title="Выше">↑</button><button class="btn sm" data-a="down"'+d+' title="Ниже">↓</button><button class="btn sm" data-a="del" title="Удалить">✕</button></span>'}
+function statusHtml(x,i){
+ if(LOADING[i])return '<span class="mono">Загружаю текст...</span>';
+ if(x.body)return '<span class="ok">✓ Текст загружен, около '+words(x.body)+' слов.</span> <details><summary>Предпросмотр как на сайте</summary><div class="prev rtext">'+x.body+'</div></details>';
+ return '<span class="bad">Текст не загружен. Вставьте ссылку и нажмите «Загрузить текст».</span>';
 }
 function renderItems(){
  var bad={};problems().forEach(function(p){bad[p.i]=true});
- var opts=function(sel){return cats.map(function(c){return '<option value="'+esc(c.k)+'"'+(c.k===sel?' selected':'')+'>'+esc(c.t)+'</option>'}).join('')};
+ var dis=filter!==''||typeF!=='all';
  var rows=[];
- items.forEach(function(x,i){if(!filter||x.cat===filter)rows.push(i)});
+ items.forEach(function(x,i){
+  if(filter&&x.cat!==filter)return;
+  if(typeF==='video'&&isArt(x))return;
+  if(typeF==='article'&&!isArt(x))return;
+  rows.push(i);
+ });
  $('rows').innerHTML=rows.length?rows.map(function(i){
-  var x=items[i],dis=filter?' disabled title="Сбросьте фильтр, чтобы менять порядок"':'';
-  return '<div class="vrow'+(bad[i]?' bad-row':'')+'" data-i="'+i+'">'+
-   '<input data-k="t" value="'+esc(x.t)+'" placeholder="Название" maxlength="120">'+
-   '<input data-k="sub" value="'+esc(x.sub||'')+'" placeholder="Например: 1 серия, 28 мин" maxlength="160">'+
-   '<select data-k="cat">'+opts(x.cat)+'</select>'+
-   '<input data-k="u" type="url" value="'+esc(x.u)+'" placeholder="https://">'+
-   '<input data-k="img" value="'+esc(x.img||'')+'" placeholder="необязательно: ссылка на картинку">'+
-   '<span class="ctl"><button data-a="up"'+dis+' title="Выше">↑</button><button data-a="down"'+dis+' title="Ниже">↓</button><button data-a="del" title="Удалить">✕</button></span></div>';
- }).join(''):'<p class="mono empty">'+(items.length?'В этой категории пока нет видео':'Видео нет. Нажмите «+ Видео»')+'</p>';
- $('hint').textContent=filter?'Сейчас показана одна категория. Чтобы менять порядок, выберите «Все».':'';
+  var x=items[i],b=bad[i]?' bad-row':'';
+  if(isArt(x)){
+   return '<div class="vrow art'+b+'" data-i="'+i+'">'+
+    '<span class="pill art">Статья</span>'+
+    '<input data-k="t" value="'+esc(x.t)+'" placeholder="Название (подтянется само)" maxlength="120" aria-label="Название статьи">'+
+    '<select data-k="cat" aria-label="Категория">'+catOpts(x.cat)+'</select>'+
+    '<input data-k="u" type="url" value="'+esc(x.u)+'" placeholder="Ссылка: telegra.ph/... или t.me/канал/номер" aria-label="Ссылка на статью">'+
+    '<span class="ctl"><button class="btn sm pri" data-a="load"'+(LOADING[i]?' disabled':'')+'>'+(x.body?'Обновить текст':'Загрузить текст')+'</button>'+
+    '<button class="btn sm" data-a="up"'+(dis?' disabled':'')+' title="Выше">↑</button><button class="btn sm" data-a="down"'+(dis?' disabled':'')+' title="Ниже">↓</button><button class="btn sm" data-a="del" title="Удалить">✕</button></span>'+
+    '<div class="astat">'+statusHtml(x,i)+'</div></div>';
+  }
+  return '<div class="vrow'+b+'" data-i="'+i+'">'+
+   '<span class="pill vid">Видео</span>'+
+   '<input data-k="t" value="'+esc(x.t)+'" placeholder="Название" maxlength="120" aria-label="Название видео">'+
+   '<input data-k="sub" value="'+esc(x.sub||'')+'" placeholder="Подзаголовок, например: 1 серия" maxlength="160" aria-label="Подзаголовок">'+
+   '<select data-k="cat" aria-label="Категория">'+catOpts(x.cat)+'</select>'+
+   '<input data-k="u" type="url" value="'+esc(x.u)+'" placeholder="https://" aria-label="Ссылка на видео">'+
+   '<input data-k="img" value="'+esc(x.img||'')+'" placeholder="Обложка (необязательно)" aria-label="Ссылка на обложку">'+
+   ctl(dis)+'</div>';
+ }).join(''):'<p class="mono empty">'+(items.length?'По этому фильтру ничего нет':'Пусто. Нажмите «+ Видео» или «+ Статья».')+'</p>';
+ $('hint').textContent=dis?'Сейчас включён фильтр. Чтобы менять порядок, выберите «Все» в обоих фильтрах.':'Статьи появятся на сайте в режиме чтения, видео — в плеере.';
 }
 function renderAll(){renderCats();renderFilters();renderItems();status()}
 
@@ -198,7 +238,7 @@ $('cats').addEventListener('click',function(e){
  var i=+b.closest('.cat-row').dataset.i,a=b.dataset.a;
  if(a==='del'){
   var n=countIn(cats[i].k);
-  if(n){alert('В категории «'+cats[i].t+'» есть видео ('+n+'). Сначала переместите их в другую категорию.');return}
+  if(n){alert('В категории «'+cats[i].t+'» есть записи ('+n+'). Сначала переместите их в другую категорию.');return}
   if(!confirm('Удалить категорию «'+cats[i].t+'»?'))return;
   if(filter===cats[i].k)filter='';
   cats.splice(i,1);
@@ -215,107 +255,114 @@ function addCat(){
  $('newCat').value='';touch();renderAll();
 }
 
-/* фильтр */
+/* фильтры */
 $('filters').addEventListener('click',function(e){var b=e.target.closest('[data-f]');if(!b)return;filter=b.dataset.f;renderAll()});
+$('typeF').addEventListener('click',function(e){var b=e.target.closest('[data-t]');if(!b)return;typeF=b.dataset.t;renderAll()});
 
-/* видео */
+/* строки каталога */
 function editItem(e){var r=e.target.closest('.vrow');if(!r||!e.target.dataset.k)return;items[+r.dataset.i][e.target.dataset.k]=e.target.value;touch()}
 $('rows').addEventListener('input',editItem);
 $('rows').addEventListener('change',function(e){editItem(e);renderAll()});
 $('rows').addEventListener('click',function(e){
  var b=e.target.closest('button');if(!b||b.disabled)return;
  var i=+b.closest('.vrow').dataset.i,a=b.dataset.a;
+ if(a==='load'){loadArticle(i);return}
  if(a==='del'){if(!confirm('Удалить «'+(items[i].t||'без названия')+'»?'))return;items.splice(i,1)}
  else if(a==='up')move(items,i,-1);
  else if(a==='down')move(items,i,1);
  touch();renderAll();
 });
-$('addVid').onclick=function(){
- if(!cats.length){alert('Сначала добавьте категорию слева');return}
- items.unshift({t:'',sub:'',cat:filter||cats[0].k,u:''});
- touch();renderAll();
- var f=document.querySelector('.vrow [data-k="t"]');if(f)f.focus();
-};
 
-/* поиск обложек по ссылкам Vimeo, Kinescope, Telegram */
+function addItem(kind){
+ if(!cats.length){alert('Сначала добавьте категорию слева');return}
+ var base={t:'',sub:'',cat:filter||cats[0].k,u:'',kind:kind};
+ if(kind==='article')base.body='';
+ items.unshift(base);
+ if(kind==='article')typeF='article';else if(typeF==='article')typeF='all';
+ touch();renderAll();
+ var f=document.querySelector('.vrow [data-k="u"]');if(f)f.focus();
+}
+$('addVid').onclick=function(){addItem('video')};
+$('addArt').onclick=function(){addItem('article')};
+
+/* загрузка текста статьи по ссылке */
+function loadArticle(i){
+ var x=items[i];
+ if(!/^https:\/\/(telegra\.ph\/|t\.me\/)/.test(String(x.u||''))){
+  msg('Вставьте ссылку вида telegra.ph/... или t.me/канал/номер',false);return;
+ }
+ LOADING[i]=true;renderItems();msg('Загружаю текст статьи...',null);
+ fetch('/api/article?url='+encodeURIComponent(x.u)).then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j}})}).then(function(res){
+  delete LOADING[i];
+  if(res.ok&&res.j.body){
+   x.body=res.j.body;x.kind='article';
+   if(!String(x.t||'').trim())x.t=res.j.title||'Статья';
+   if(!x.img&&res.j.image)x.img=res.j.image;
+   touch();
+   msg('Текст загружен. Проверьте предпросмотр ниже и нажмите «Сохранить».',true);
+  } else {
+   msg(res.j.error||'Не удалось загрузить текст',false);
+  }
+  renderAll();
+ }).catch(function(){delete LOADING[i];msg('Нет связи с сервером. Попробуйте ещё раз.',false);renderAll()});
+}
+
+/* обложки для видео */
 $('fetchCov').onclick=function(){
  var todo=[];
- items.forEach(function(x,i){if(!x.img&&/^https:\/\/(vimeo\.com|kinescope\.io|t\.me)\//i.test(x.u||''))todo.push(i)});
+ items.forEach(function(x,i){if(!isArt(x)&&!x.img&&/^https:\/\/(vimeo\.com|kinescope\.io|t\.me)\//i.test(x.u||''))todo.push(i)});
  if(!todo.length){alert('Обложки не нужны или уже есть у всех видео.');return}
  var btn=$('fetchCov');btn.disabled=true;
  var found=0,n=0;
- $('msg').className='';$('msg').textContent='Ищу обложки...';
+ msg('Ищу обложки...',null);
  todo.reduce(function(p,i){
   return p.then(function(){
    return fetch('/api/cover?url='+encodeURIComponent(items[i].u)).then(function(r){return r.json()}).then(function(j){
     n++;if(j.image){items[i].img=j.image;found++;touch()}
-    $('msg').textContent='Ищу обложки: '+n+' из '+todo.length;
-   }).catch(function(){n++});
-  });
- },Promise.resolve()).then(function(){
-  btn.disabled=false;renderItems();status();
-  $('msg').className='ok';$('msg').textContent='Найдено обложек: '+found+' из '+todo.length+'. Не забудьте сохранить.';
- });
-};
-
-/* статьи из telegra.ph и постов Telegram */
-$('fetchArt').onclick=function(){
- var todo=[];
- items.forEach(function(x,i){if(!x.body&&/^https:\/\/(telegra\.ph\/|t\.me\/)/.test(x.u||''))todo.push(i)});
- if(!todo.length){alert('Нет ссылок на telegra.ph или t.me без текста.');return}
- if(!confirm('Загрузить текст из '+todo.length+' ссылок? Текст станет статьёй на сайте. Проверьте, нет ли в нём личных данных.'))return;
- var btn=$('fetchArt');btn.disabled=true;
- var done=0,n=0;
- $('msg').className='';$('msg').textContent='Загружаю статьи...';
- todo.reduce(function(p,i){
-  return p.then(function(){
-   return fetch('/api/article?url='+encodeURIComponent(items[i].u)).then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j}})}).then(function(res){
-    n++;
-    if(res.ok&&res.j.body){
-     items[i].body=res.j.body;
-     if(!items[i].t)items[i].t=res.j.title||'Статья';
-     if(!items[i].img&&res.j.image)items[i].img=res.j.image;
-     done++;touch();
-    }
-    $('msg').textContent='Загружаю статьи: '+n+' из '+todo.length;
+    msg('Ищу обложки: '+n+' из '+todo.length,null);
    }).catch(function(){n++});
   });
  },Promise.resolve()).then(function(){
   btn.disabled=false;renderAll();
-  $('msg').className='ok';$('msg').textContent='Загружено статей: '+done+' из '+todo.length+'. Нажмите «Сохранить».';
+  msg('Найдено обложек: '+found+' из '+todo.length+'. Нажмите «Сохранить».',true);
  });
 };
 
 /* сохранение */
 $('save').onclick=function(){
  var p=problems();
- if(p.length&&!confirm('Есть проблемы ('+p.length+'). Сохранить всё равно? Строки с ошибкой будут сохранены как есть.'))return;
- $('msg').className='';$('msg').textContent='Сохраняю...';
+ if(p.length&&!confirm('Есть проблемы ('+p.length+'). Сохранить всё равно?'))return;
+ msg('Сохраняю...',null);
  api({items:items,cats:cats}).then(function(r){
   dirty=false;var d=new Date();lastSave=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
-  $('msg').className='ok';$('msg').textContent='Сохранено: '+r.items+' видео, '+r.cats+' категорий';status();
- }).catch(function(e){$('msg').className='bad';$('msg').textContent=e.message});
+  msg('Сохранено: видео и статьи — '+r.items+', категорий — '+r.cats,true);status();
+ }).catch(function(e){msg(e.message,false)});
 };
 window.addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue=''}});
 
 /* Навигашка в редакторе */
 (function(){
- var char=$('nvChar'),bub=$('nvBub'),txt=$('nvTxt'),acts=$('nvActs');
- function show(t,list){txt.textContent=t;acts.innerHTML='';(list||[]).forEach(function(x){var b=document.createElement('button');b.type='button';b.className='nv-btn';b.textContent=x.label;b.onclick=x.fn;acts.appendChild(b)});bub.hidden=false;char.setAttribute('aria-expanded','true')}
- function hide(){bub.hidden=true;char.setAttribute('aria-expanded','false')}
+ var char=$('nvChar'),bub=$('nvBub'),txt=$('nvTxt'),acts=$('nvActs'),timer=null;
+ function show(t,list){
+  clearTimeout(timer);
+  txt.textContent=t;acts.innerHTML='';
+  (list||[]).forEach(function(x){var b=document.createElement('button');b.type='button';b.className='nv-btn';b.textContent=x.label;b.onclick=x.fn;acts.appendChild(b)});
+  bub.hidden=false;char.setAttribute('aria-expanded','true');
+  timer=setTimeout(hide,(list&&list.length)?9000:5000);
+ }
+ function hide(){clearTimeout(timer);bub.hidden=true;char.setAttribute('aria-expanded','false')}
  function back(){return {label:'Назад',fn:menu}}
  function check(){
   var p=problems();
-  if(!p.length){show('Проблем нет. Видео: '+items.length+', категорий: '+cats.length+'.',[back()]);return}
-  show('Нашёл проблемы ('+p.length+'):\n'+p.slice(0,6).map(function(x){return '• '+x.text}).join('\n')+(p.length>6?'\n…и ещё '+(p.length-6):'')+'\n\nОни подсвечены красным в списке.',[back()]);
+  if(!p.length){show('Проблем нет. Видео: '+items.filter(function(x){return !isArt(x)}).length+', статей: '+items.filter(isArt).length+'.',[back()]);return}
+  show('Нашёл проблемы ('+p.length+'):\n'+p.slice(0,5).map(function(x){return '• '+x.text}).join('\n')+(p.length>5?'\n…и ещё '+(p.length-5):''),[back()]);
  }
- function howto(){show('Видео добавляется кнопкой «+ Видео». Категория выбирается из списка. Порядок влияет на главную: первое видео показывается как «новое». Чтобы видеть только одну категорию, нажмите её в фильтре.',[back()])}
- function sub(){show('Подзаголовок — дополнительная информация к названию, например «1 серия» или «28 мин». На сайте он выводится под названием, а в поиске тоже учитывается.',[back()])}
- function cat(){show('Категории можно переименовывать, менять порядок и добавлять. Категорию с видео удалить нельзя: сначала перенесите видео.',[back()])}
+ function video(){show('Видео: вставьте ссылку YouTube, Vimeo, Kinescope или mp4. Название обязательно. Обложку подтянет кнопка «Обложки».',[back()])}
+ function article(){show('Статья: нажмите «+ Статья», вставьте ссылку telegra.ph или поста из Telegram, нажмите «Загрузить текст», проверьте предпросмотр и сохраните.',[back()])}
  function menu(){
   var p=problems();
-  show(p.length?'Привет! Нашёл проблем: '+p.length+'. Проверим?':'Привет! Я Навигашка. Видео: '+items.length+', категорий: '+cats.length+'. Чем помочь?',[
-   {label:'Проверить',fn:check},{label:'Как добавить видео',fn:howto},{label:'Подзаголовки',fn:sub},{label:'Категории',fn:cat}]);
+  show(p.length?'Привет! Нашёл проблем: '+p.length+'. Проверим?':'Привет! Я Навигашка. Помогу добавить видео или статью. Что нужно?',[
+   {label:'Проверить',fn:check},{label:'Как добавить видео',fn:video},{label:'Как добавить статью',fn:article},{label:'Категории',fn:function(){show('Категории можно переименовывать, менять порядок и добавлять. Категорию с записями удалить нельзя: сначала перенесите записи.',[back()])}}]);
  }
  char.onclick=function(){bub.hidden?menu():hide()};
  $('nvClose').onclick=hide;
@@ -324,8 +371,8 @@ window.addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();
 })();
 
 /* вход */
-function show2(){$('login').hidden=true;$('app').hidden=false}
-function load(){return fetch('/api/items',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){items=d.items||[];cats=d.cats||[];renderAll();show2();setTimeout(function(){if(!sessionStorage.getItem('nvSeenAdmin')){sessionStorage.setItem('nvSeenAdmin','1');window.nvMenu()}},400)})}
+function showApp(){$('login').hidden=true;$('app').hidden=false}
+function load(){return fetch('/api/items',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){items=d.items||[];cats=d.cats||[];renderAll();showApp();setTimeout(function(){if(!sessionStorage.getItem('nvSeenAdmin')){sessionStorage.setItem('nvSeenAdmin','1');window.nvMenu()}},400)})}
 $('lf').onsubmit=function(e){
  e.preventDefault();pw=$('pw').value;$('lmsg').textContent='Проверяю...';
  api({check:true}).then(function(){sessionStorage.setItem('pw',pw);return load()}).catch(function(err){$('lmsg').textContent=err.message;$('lmsg').className='mono bad'});

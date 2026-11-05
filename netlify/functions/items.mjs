@@ -65,7 +65,7 @@ function cleanItems(list, keys) {
     const img = String(x.img ?? "").trim();
     if (img && !/^https?:\/\//i.test(img)) throw new Error(`Видео ${row}: обложка должна быть ссылкой на картинку (https://)`);
     const body = sanitizeHtml(String(x.body ?? "")).slice(0, 60000);
-    return { t: t.slice(0, 120), sub: String(x.sub ?? "").trim().slice(0, 160), cat: x.cat, u: u.slice(0, 500), img: img.slice(0, 500), body };
+    return { t: t.slice(0, 120), sub: String(x.sub ?? "").trim().slice(0, 160), cat: x.cat, u: u.slice(0, 500), img: img.slice(0, 500), body, kind: x.kind === "article" ? "article" : "video" };
   });
 }
 

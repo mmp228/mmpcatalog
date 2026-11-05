@@ -6,6 +6,7 @@
 <meta name="description" content="Каталог контента MATVEY MONTAGE PRODUCTION: новости, клипы, выступления и закулисье.">
 <meta property="og:title" content="Каталог контента MMP"><meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='%23ff4f00'/%3E%3C/svg%3E">
+<link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#0e0e0d"><link rel="apple-touch-icon" href="/icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="MMP">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -234,6 +235,29 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
  .wv.tg iframe{height:100%}
  .plist{max-height:calc(100vh - 190px)}
 }
+
+/* настройки */
+.sett{position:fixed;inset:0;z-index:95;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.sett[hidden]{display:none}
+.sbox{width:min(440px,100%);background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:12px;box-shadow:0 20px 50px rgba(0,0,0,.5);backdrop-filter:blur(14px)}
+.aero .sbox{background:linear-gradient(180deg,#f7feff,#cdeeff);border-color:#fff;color:#06304f}
+.sh{display:flex;justify-content:space-between;align-items:center;font-size:16px}
+.srow{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px}
+.seg{display:flex;gap:4px;flex-wrap:wrap}
+.seg button{font-family:var(--mono);font-size:12px;padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:none;color:var(--ink);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.srow input[type=checkbox]{width:20px;height:20px;accent-color:var(--acc)}
+/* мини-окно: плеер в углу, каталог остаётся доступен */
+.watch.mini{inset:auto 16px 112px auto;width:min(380px,calc(100vw - 32px));height:auto;background:none;overflow:visible;pointer-events:none;z-index:65;animation:none}
+.aero .watch.mini{background:none}
+.watch.mini .bubbles,.watch.mini .wsub,.watch.mini .wmeta,.watch.mini .plist,.watch.mini #wPrev,.watch.mini #wRep,.watch.mini #wAdd,.watch.mini #wOpen,.watch.mini #wShare,.watch.mini #wResume{display:none}
+.watch.mini .wbar{pointer-events:auto;border-radius:12px;padding:8px 10px;border:1px solid var(--line)}
+.watch.mini .wbody{display:block;padding:0;max-width:none;margin:0}
+.watch.mini .wv{pointer-events:auto;width:100%;margin-top:8px;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.5)}
+.watch.mini .wv.tg{height:260px;min-height:0}
+.watch.mini .wt b{font-size:13px}
+.watch.mini .wbtns{justify-content:flex-start}
+.watch.mini .wbar{flex-wrap:wrap}
 </style></head>
 <body>
 <div class="bubbles" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
@@ -241,6 +265,7 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
  <header class="box top">
   <a class="brand" href="#"><span class="dot"></span>Каталог контента MMP</a>
   <div class="hact">
+   <button class="thb" id="setBtn" type="button" aria-label="Настройки">⚙ Настройки</button>
    <button class="thb" id="thBtn" type="button" aria-pressed="false">Тема</button>
    <a class="tg" href="https://t.me/mmpcatalog" target="_blank" rel="noopener">Telegram-канал</a>
   </div>
@@ -287,7 +312,7 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
    <button class="b2" id="wResume" type="button" hidden title="Вернуться к сохранённому месту">↺</button>
    <button class="b2" id="wAdd" type="button" title="Добавить в плейлист">＋ список</button>
    <button class="b2" id="wRep" type="button" title="Повтор списка" aria-pressed="false">⟲</button>
-   <a class="b2" id="wOpen" target="_blank" rel="noopener">↗</a>
+   <button class="b2" id="wMini" type="button" title="Мини-окно">▭ Мини</button><button class="b2" id="wShare" type="button" title="Поделиться">Поделиться</button><a class="b2" id="wOpen" target="_blank" rel="noopener">↗</a>
    <button class="b2" id="wClose" type="button">✕ Закрыть</button>
   </div>
  </div>
@@ -302,6 +327,19 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
  </div>
 </div>
 
+<div class="sett" id="sett" hidden role="dialog" aria-modal="true" aria-label="Настройки">
+ <div class="sbox">
+  <div class="sh"><b>Настройки</b><button class="b2" id="setClose" type="button">✕</button></div>
+  <div class="srow"><span>Тема</span><div class="seg" id="segTheme"><button type="button" data-v="auto">Авто</button><button type="button" data-v="std">Обычная</button><button type="button" data-v="aero">Aero</button></div></div>
+  <p class="mono">Авто: Aero днём (с 8 до 20), тёмная ночью.</p>
+  <label class="srow"><span>Звук</span><input type="checkbox" id="setSnd"></label>
+  <label class="srow"><span>Переход к следующему видео</span><input type="checkbox" id="setNext"></label>
+  <label class="srow"><span>Повтор списка</span><input type="checkbox" id="setRep"></label>
+  <div class="srow"><span>Места просмотра</span><button class="b2" id="setClear" type="button">Сбросить</button></div>
+  <div class="srow"><span>Приложение</span><button class="b2 pri" id="setInstall" type="button" hidden>Установить</button></div>
+  <p class="mono" id="setHint"></p>
+ </div>
+</div>
 <div class="dock">
  <button class="nv-char" id="nvChar" type="button" aria-expanded="false" aria-label="Навигашка: помощь по каталогу">
   <svg class="nv-svg" viewBox="0 0 64 64" aria-hidden="true"><line class="nv-stick" x1="32" y1="9" x2="32" y2="15"/><circle class="nv-ant" cx="32" cy="6" r="4"/><rect class="nv-body" x="11" y="14" width="42" height="40" rx="11"/><rect class="nv-screen" x="19" y="24" width="26" height="17" rx="5"/><rect class="nv-eye" x="24" y="29" width="5" height="7" rx="1.5"/><rect class="nv-eye" x="35" y="29" width="5" height="7" rx="1.5"/><rect class="nv-mouth" x="27" y="46" width="10" height="3" rx="1.5"/></svg>
@@ -325,8 +363,9 @@ function lsJSON(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==nul
 function saveJSON(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}}
 var PLS=lsJSON('mmp_pls',[]),POS=lsJSON('mmp_pos',{});
 if(!Array.isArray(PLS))PLS=[];
+if(!PLS.some(function(p){return p.id==='later'}))PLS.unshift({id:'later',name:'Смотреть позже',keys:[],system:true});
 if(typeof POS!=='object'||!POS)POS={};
-var theme=lsGet('mmp_theme')==='aero'?'aero':'std',repeatOn=lsGet('mmp_rep')==='1',muted=lsGet('mmp_mute')==='1',AC=null,lastPosSave=0;
+var theme=['aero','std','auto'].indexOf(lsGet('mmp_theme'))>-1?lsGet('mmp_theme'):'auto',repeatOn=lsGet('mmp_rep')==='1',muted=lsGet('mmp_mute')==='1',AC=null,lastPosSave=0;
 
 /* ссылки, обложки, встраивание */
 function ytId(u){var m=u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/);return m?m[1]:''}
@@ -447,8 +486,8 @@ function renderPls(){
     '<span class="pm"><span class="pt">'+esc(x?x.t:'Видео удалено из каталога')+'</span>'+(x&&x.sub?'<span class="ps">'+esc(x.sub)+'</span>':'')+'</span>'+
     '<span class="pls-ctl"><button type="button" data-act="up" aria-label="Выше">↑</button><button type="button" data-act="down" aria-label="Ниже">↓</button><button type="button" data-act="rm" aria-label="Убрать">✕</button></span></div>';
   }).join('');
-  return '<article class="pls" data-pid="'+esc(p.id)+'"><div class="pls-h"><input class="pls-name" value="'+esc(p.name)+'" maxlength="40" aria-label="Название плейлиста">'+
-   '<span class="mono">'+n+' видео</span><span class="pls-acts"><button class="b2 pri" type="button" data-act="play"'+(n?'':' disabled')+'>▶ Смотреть</button><button class="b2" type="button" data-act="del">Удалить</button></span></div>'+
+  return '<article class="pls" data-pid="'+esc(p.id)+'"><div class="pls-h"><input class="pls-name" value="'+esc(p.name)+'" maxlength="40" aria-label="Название плейлиста"'+(p.system?' readonly':'')+'>'+
+   '<span class="mono">'+n+' видео</span><span class="pls-acts"><button class="b2 pri" type="button" data-act="play"'+(n?'':' disabled')+'>▶ Смотреть</button><button class="b2" type="button" data-act="share">Поделиться</button>'+(p.system?'':'<button class="b2" type="button" data-act="del">Удалить</button>')+'</span></div>'+
    (n?rows:'<p class="mono pls-empty">Пусто. Нажмите «＋» на карточке видео в каталоге, чтобы добавить сюда.</p>')+'</article>';
  }).join(''):'<p class="mono pls-empty">Плейлистов пока нет. Создайте первый выше или нажмите «＋» на видео в каталоге.</p>';
 }
@@ -463,7 +502,7 @@ $('plsList').addEventListener('click',function(e){
  var act=b.dataset.act;
  if(act==='play'){var list=plItems(p);if(list.length)openWatch(list[0],list,'pl:'+p.id);return}
  if(act==='del'){if(!confirm('Удалить плейлист «'+p.name+'»?'))return;PLS=PLS.filter(function(x){return x!==p});saveJSON('mmp_pls',PLS);render();return}
- var row=b.closest('.pls-row'),i=+row.dataset.i;
+ var row=b.closest('.pls-row');if(!row)return;var i=+row.dataset.i;
  if(act==='up')move(p.keys,i,-1);
  else if(act==='down')move(p.keys,i,1);
  else if(act==='rm')p.keys.splice(i,1);
@@ -593,6 +632,7 @@ function playCur(){
 function endedNow(){
  if(!CUR||CUR.ended)return;
  CUR.ended=true;savePos(CUR.key,0);flushPos();
+ if(lsGet('mmp_autonext')==='0'){nvShow('Видео закончилось. Нажмите «Далее», чтобы продолжить.',[{label:'Далее',fn:function(){next()}},{label:'Понятно',fn:nvHide}]);return}
  next();
 }
 function next(){
@@ -636,13 +676,15 @@ $('wAdd').onclick=function(){if(CUR)nvAddMenu(ITEMS.indexOf(CUR.item))};
 $('wClose').onclick=closeWatch;
 
 /* тема */
+function effTheme(){if(theme==='auto'){var h=new Date().getHours();return h>=8&&h<20?'aero':'std'}return theme}
 function applyTheme(){
- document.documentElement.classList.toggle('aero',theme==='aero');
- document.body.classList.toggle('aero',theme==='aero');
- $('thBtn').textContent=theme==='aero'?'Тема: Aero':'Тема: обычная';
- $('thBtn').setAttribute('aria-pressed',theme==='aero'?'true':'false');
+ var on=effTheme()==='aero';
+ document.documentElement.classList.toggle('aero',on);
+ document.body.classList.toggle('aero',on);
+ $('thBtn').textContent=on?'Тема: Aero':'Тема: обычная';
+ $('thBtn').setAttribute('aria-pressed',on?'true':'false');
 }
-$('thBtn').onclick=function(){theme=theme==='aero'?'std':'aero';lsSet('mmp_theme',theme);applyTheme()};
+$('thBtn').onclick=function(){theme=effTheme()==='aero'?'std':'aero';lsSet('mmp_theme',theme);applyTheme()};
 
 /* клавиши */
 document.addEventListener('keydown',function(e){
@@ -751,12 +793,109 @@ $('nvBub').addEventListener('focusin',function(){clearTimeout(nvTimer)});
 /* запуск */
 $('fBtn').onclick=function(){handleOpen(+this.dataset.i||0)};
 $('q').addEventListener('input',render);
-window.addEventListener('hashchange',render);
+window.addEventListener('hashchange',function(){render();if(typeof handleShareHash==='function')handleShareHash()});
 applyTheme();
 render();
 fetch('/api/items',{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){
- ITEMS=d.items||[];CATS=d.cats||[];STATE='ok';render();
+ ITEMS=d.items||[];CATS=d.cats||[];STATE='ok';render();if(typeof handleShareHash==='function')handleShareHash();
  if(!sessionStorage.getItem('nvSeen')){sessionStorage.setItem('nvSeen','1');setTimeout(function(){if($('watch').hidden){nvMenu()}},1500)}
 }).catch(function(){STATE='err';render()});
+</script>
+<script>
+(function(){
+ var mini=false;
+ $('wMini').onclick=function(){
+  mini=!mini;
+  $('watch').classList.toggle('mini',mini);
+  this.textContent=mini?'▣ Развернуть':'▭ Мини';
+  document.body.style.overflow=mini?'':'hidden';
+  if(!mini){}
+ };
+ $('wClose').addEventListener('click',function(){
+  mini=false;$('watch').classList.remove('mini');$('wMini').textContent='▭ Мини';
+ });
+
+ /* поделиться */
+ function b64u(s){return btoa(unescape(encodeURIComponent(s))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+ function unb64u(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return decodeURIComponent(escape(atob(s)))}
+ function base(){return location.origin+location.pathname}
+ function share(title,url){
+  if(navigator.share){navigator.share({title:title,url:url}).catch(function(){})}
+  else if(navigator.clipboard){
+   navigator.clipboard.writeText(url).then(function(){nvShow('Ссылка скопирована. Откроется этот же ролик или список.',[{label:'Понятно',fn:nvHide}])}).catch(function(){nvShow(url,[{label:'Понятно',fn:nvHide}])});
+  } else nvShow(url,[{label:'Понятно',fn:nvHide}]);
+ }
+ function shareVideo(it){share(it.t,base()+'#play='+b64u(keyOf(it)))}
+ function sharePlaylist(p){share(p.name,base()+'#list='+b64u(JSON.stringify({n:p.name,k:p.keys})))}
+ $('wShare').onclick=function(){if(CUR)shareVideo(CUR.item)};
+ $('plsList').addEventListener('click',function(e){
+  var b=e.target.closest('button[data-act="share"]');if(!b)return;
+  var art=b.closest('.pls'),p=PLS.find(function(x){return x.id===art.dataset.pid});
+  if(p)sharePlaylist(p);
+ });
+ window.handleShareHash=function(){
+  var h=location.hash.slice(1);
+  if(h.indexOf('play=')===0){
+   var k;try{k=unb64u(h.slice(5))}catch(_){return}
+   history.replaceState(null,'',location.pathname);
+   var it=ITEMS.find(function(x){return keyOf(x)===k});
+   if(it)openWatch(it);
+   return;
+  }
+  if(h.indexOf('list=')===0){
+   var d;try{d=JSON.parse(unb64u(h.slice(5)))}catch(_){return}
+   history.replaceState(null,'',location.pathname);
+   var keys=(d.k||[]).filter(function(k){return !!findByKey(k)});
+   if(!keys.length){nvShow('Такого списка нет или все видео в нём удалены.',[{label:'Понятно',fn:nvHide}]);return}
+   if(!confirm('Открыть общий список «'+(d.n||'Список')+'» ('+keys.length+' видео)? Он сохранится у вас.'))return;
+   var p={id:Date.now().toString(36),name:String(d.n||'Список').slice(0,40),keys:keys};
+   PLS.push(p);saveJSON('mmp_pls',PLS);render();
+   var list=plItems(p);if(list.length)openWatch(list[0],list,'pl:'+p.id);
+  }
+ };
+
+ /* настройки */
+ function openSett(){$('sett').hidden=false;syncSett()}
+ function closeSett(){$('sett').hidden=true}
+ function syncSett(){
+  document.querySelectorAll('#segTheme button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.v===theme?'true':'false')});
+  $('setSnd').checked=!muted;
+  $('setNext').checked=lsGet('mmp_autonext')!=='0';
+  $('setRep').checked=repeatOn;
+ }
+ $('setBtn').onclick=openSett;
+ $('setClose').onclick=closeSett;
+ $('sett').addEventListener('click',function(e){if(e.target===$('sett'))closeSett()});
+ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('sett').hidden)closeSett()});
+ $('segTheme').addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  theme=b.dataset.v;lsSet('mmp_theme',theme);applyTheme();syncSett();
+ });
+ $('setSnd').onchange=function(){muted=!this.checked;lsSet('mmp_mute',muted?'1':'0')};
+ $('setNext').onchange=function(){lsSet('mmp_autonext',this.checked?'1':'0')};
+ $('setRep').onchange=function(){repeatOn=this.checked;lsSet('mmp_rep',repeatOn?'1':'0');if(!$('watch').hidden)syncBtns()};
+ $('setClear').onclick=function(){
+  if(!confirm('Сбросить сохранённые места просмотра?'))return;
+  POS={};saveJSON('mmp_pos',POS);
+  nvShow('Места просмотра сброшены.',[{label:'Понятно',fn:nvHide}]);
+ };
+ setInterval(function(){if(theme==='auto')applyTheme()},60000);
+
+ /* установка как приложение */
+ var deferred=null;
+ var standalone=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;
+ window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;$('setInstall').hidden=false});
+ $('setInstall').onclick=function(){
+  if(!deferred)return;
+  deferred.prompt();
+  deferred.userChoice.then(function(){deferred=null;$('setInstall').hidden=true});
+ };
+ window.addEventListener('appinstalled',function(){$('setInstall').hidden=true;$('setHint').textContent='Приложение установлено.'});
+ if(standalone)$('setHint').textContent='Приложение уже установлено.';
+ else if(/iphone|ipad/i.test(navigator.userAgent))$('setHint').textContent='На iPhone: откройте меню «Поделиться» в Safari и выберите «На экран «Домой»».';
+ else if(!deferred)$('setHint').textContent='Чтобы установить, откройте меню браузера и выберите «Установить приложение».';
+
+ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}
+})();
 </script>
 </body></html>

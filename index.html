@@ -183,6 +183,8 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
 .nv-bub{position:fixed;left:16px;bottom:112px;z-index:90;width:min(320px,calc(100vw - 32px));background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
 .aero .nv-bub{background:linear-gradient(180deg,#f7feff,#cdeeff);border-color:#fff;color:#06304f}
 .nv-bub[hidden]{display:none}
+.nv-bub:not([hidden]){animation:nvPop .18s ease-out both}
+@keyframes nvPop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .nv-bub::after{content:"";position:absolute;left:38px;bottom:-7px;width:12px;height:12px;background:var(--panel);border-right:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg)}
 .aero .nv-bub::after{background:#e4f6ff}
 .nv-who{display:block;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--acc);letter-spacing:.06em;margin-bottom:6px}
@@ -275,6 +277,17 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
  #wRep,#wShare,#wMini{display:none}
  .wt b{white-space:normal;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 }
+
+/* полоска прогресса: сплошная линия на всю ширину, между названием и кнопками */
+.wbar{flex-direction:column;align-items:stretch;padding:0;gap:0}
+.wbar .wt{padding:10px 14px 8px}
+.wbar .pbar{margin:0;height:4px;border-radius:0;background:rgba(255,255,255,.12)}
+.wbar .pbar i{border-radius:0}
+.wbar .wbtns{padding:8px 14px 10px;justify-content:center}
+.aero .wbar .pbar{background:rgba(255,255,255,.6)}
+.plist .pbar{margin:6px -8px 8px;height:4px;border-radius:0}
+.watch.mini .wbar .wt{padding:8px 12px 6px}
+.watch.mini .wbar .wbtns{padding:6px 10px 8px}
 </style></head>
 <body>
 <div class="bubbles" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
@@ -322,7 +335,7 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
 <div class="watch" id="watch" hidden role="dialog" aria-modal="true" aria-label="Просмотр">
  <div class="bubbles" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
  <div class="wbar">
-  <div class="wt"><span class="mono" id="wCat"></span><b id="wTitle"></b><div class="pbar"><i id="wPb"></i></div></div>
+  <div class="wt"><span class="mono" id="wCat"></span><b id="wTitle"></b></div><div class="pbar"><i id="wPb"></i></div>
   <div class="wbtns">
    <button class="b2" id="wPrev" type="button" title="Назад (←)">◀</button>
    <button class="b2 pri" id="wNext" type="button" title="Вперёд (→)">Далее ▶</button>
@@ -766,7 +779,7 @@ window.addEventListener('message',function(e){
 var nvTimer=null;
 function nvShow(t,list){
  clearTimeout(nvTimer);
- nvTimer=setTimeout(nvHide,(list&&list.length)?12000:9000);
+ nvTimer=setTimeout(nvHide,(list&&list.length)?5000:3000);
  $('nvTxt').textContent=t;
  var acts=$('nvActs');acts.innerHTML='';
  (list||[]).forEach(function(x){var b=document.createElement('button');b.type='button';b.className='nv-btn';b.textContent=x.label;b.onclick=x.fn;acts.appendChild(b)});
@@ -804,7 +817,7 @@ function nvEmpty(q){
 $('nvChar').onclick=function(){$('nvBub').hidden?nvMenu():nvHide()};
 $('nvClose').onclick=nvHide;
 $('nvBub').addEventListener('mouseenter',function(){clearTimeout(nvTimer)});
-$('nvBub').addEventListener('mouseleave',function(){clearTimeout(nvTimer);nvTimer=setTimeout(nvHide,4000)});
+$('nvBub').addEventListener('mouseleave',function(){clearTimeout(nvTimer);nvTimer=setTimeout(nvHide,1500)});
 $('nvBub').addEventListener('focusin',function(){clearTimeout(nvTimer)});
 
 /* запуск */
@@ -842,32 +855,41 @@ fetch('/api/items',{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return 
    navigator.clipboard.writeText(url).then(function(){nvShow('Ссылка скопирована. Откроется этот же ролик или список.',[{label:'Понятно',fn:nvHide}])}).catch(function(){nvShow(url,[{label:'Понятно',fn:nvHide}])});
   } else nvShow(url,[{label:'Понятно',fn:nvHide}]);
  }
- function shareVideo(it){share(it.t,base()+'#play='+b64u(keyOf(it)))}
- function sharePlaylist(p){share(p.name,base()+'#list='+b64u(JSON.stringify({n:p.name,k:p.keys})))}
- $('wShare').onclick=function(){if(CUR)shareVideo(CUR.item)};
- $('plsList').addEventListener('click',function(e){
-  var b=e.target.closest('button[data-act="share"]');if(!b)return;
-  var art=b.closest('.pls'),p=PLS.find(function(x){return x.id===art.dataset.pid});
-  if(p)sharePlaylist(p);
- });
+ function fnv(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0}return h.toString(36)}
+ function hashOf(it){return fnv(keyOf(it))}
+ function shareVideo(it){share(it.t,base()+'#v='+hashOf(it))}
+ function sharePlaylist(p){
+  var hashes=p.keys.map(function(k){return fnv(k)});
+  fetch('/api/share',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name:p.name,h:hashes})})
+   .then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||'Ошибка');return j})})
+   .then(function(j){share(p.name,base()+'#p='+j.id)})
+   .catch(function(err){nvShow('Не удалось создать ссылку: '+err.message,[{label:'Понятно',fn:nvHide}])});
+ }
  window.handleShareHash=function(){
   var h=location.hash.slice(1);
-  if(h.indexOf('play=')===0){
-   var k;try{k=unb64u(h.slice(5))}catch(_){return}
+  if(h.indexOf('v=')===0){
+   var hv=h.slice(2);
    history.replaceState(null,'',location.pathname);
-   var it=ITEMS.find(function(x){return keyOf(x)===k});
+   var it=ITEMS.find(function(x){return hashOf(x)===hv});
    if(it)openWatch(it);
+   else nvShow('Такое видео не найдено в каталоге. Возможно, его уже удалили.',[{label:'Понятно',fn:nvHide}]);
    return;
   }
-  if(h.indexOf('list=')===0){
-   var d;try{d=JSON.parse(unb64u(h.slice(5)))}catch(_){return}
+  if(h.indexOf('p=')===0){
+   var id=h.slice(2);
    history.replaceState(null,'',location.pathname);
-   var keys=(d.k||[]).filter(function(k){return !!findByKey(k)});
-   if(!keys.length){nvShow('Такого списка нет или все видео в нём удалены.',[{label:'Понятно',fn:nvHide}]);return}
-   if(!confirm('Открыть общий список «'+(d.n||'Список')+'» ('+keys.length+' видео)? Он сохранится у вас.'))return;
-   var p={id:Date.now().toString(36),name:String(d.n||'Список').slice(0,40),keys:keys};
-   PLS.push(p);saveJSON('mmp_pls',PLS);render();
-   var list=plItems(p);if(list.length)openWatch(list[0],list,'pl:'+p.id);
+   fetch('/api/share?id='+encodeURIComponent(id),{cache:'no-store'})
+    .then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||'Ошибка');return j})})
+    .then(function(d){
+     var map={};ITEMS.forEach(function(x){map[hashOf(x)]=keyOf(x)});
+     var keys=(d.h||[]).map(function(x){return map[x]}).filter(Boolean);
+     if(!keys.length){nvShow('Все видео из этого списка уже удалены из каталога.',[{label:'Понятно',fn:nvHide}]);return}
+     if(!confirm('Открыть общий список «'+d.name+'» ('+keys.length+' видео)? Он сохранится у вас.'))return;
+     var p={id:Date.now().toString(36),name:String(d.name).slice(0,40),keys:keys};
+     PLS.push(p);saveJSON('mmp_pls',PLS);render();
+     var list=plItems(p);if(list.length)openWatch(list[0],list,'pl:'+p.id);
+    })
+    .catch(function(err){nvShow('Список не открылся: '+err.message,[{label:'Понятно',fn:nvHide}])});
   }
  };
 

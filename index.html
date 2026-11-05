@@ -226,6 +226,14 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
  .wbar #wOpen{display:none}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* плеер помещается в окно целиком: учитываем шапку плеера и нижнюю полосу */
+@media (min-width:901px){
+ .wv{width:min(100%,calc((100vh - 190px) * 16 / 9));margin:0 auto}
+ .wv.tg{width:min(100%,calc((100vh - 190px) * 16 / 9));height:calc(100vh - 190px);min-height:0}
+ .wv.tg iframe{height:100%}
+ .plist{max-height:calc(100vh - 190px)}
+}
 </style></head>
 <body>
 <div class="bubbles" aria-hidden="true"><span></span><span></span><span></span><span></span></div>

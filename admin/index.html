@@ -116,7 +116,7 @@ input::placeholder{color:#5d5d57}
   </section>
 
   <section class="box sec">
-   <h2>Видео <button class="btn pri sm" id="addVid" type="button">+ Видео</button></h2>
+   <h2>Видео <span class="acts"><button class="btn sm" id="fetchCov" type="button" title="Найти обложки по ссылкам Vimeo, Kinescope и Telegram">Обложки</button> <button class="btn pri sm" id="addVid" type="button">+ Видео</button></span></h2>
    <div class="filters" id="filters"></div>
    <div class="vhead"><span>Название</span><span>Подзаголовок</span><span>Категория</span><span>Ссылка</span><span>Обложка</span><span></span></div>
    <div class="list" id="rows"></div>
@@ -235,6 +235,27 @@ $('addVid').onclick=function(){
  items.unshift({t:'',sub:'',cat:filter||cats[0].k,u:''});
  touch();renderAll();
  var f=document.querySelector('.vrow [data-k="t"]');if(f)f.focus();
+};
+
+/* поиск обложек по ссылкам Vimeo, Kinescope, Telegram */
+$('fetchCov').onclick=function(){
+ var todo=[];
+ items.forEach(function(x,i){if(!x.img&&/^https:\/\/(vimeo\.com|kinescope\.io|t\.me)\//i.test(x.u||''))todo.push(i)});
+ if(!todo.length){alert('Обложки не нужны или уже есть у всех видео.');return}
+ var btn=$('fetchCov');btn.disabled=true;
+ var found=0,n=0;
+ $('msg').className='';$('msg').textContent='Ищу обложки...';
+ todo.reduce(function(p,i){
+  return p.then(function(){
+   return fetch('/api/cover?url='+encodeURIComponent(items[i].u)).then(function(r){return r.json()}).then(function(j){
+    n++;if(j.image){items[i].img=j.image;found++;touch()}
+    $('msg').textContent='Ищу обложки: '+n+' из '+todo.length;
+   }).catch(function(){n++});
+  });
+ },Promise.resolve()).then(function(){
+  btn.disabled=false;renderItems();status();
+  $('msg').className='ok';$('msg').textContent='Найдено обложек: '+found+' из '+todo.length+'. Не забудьте сохранить.';
+ });
 };
 
 /* сохранение */

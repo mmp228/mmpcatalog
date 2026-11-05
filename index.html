@@ -323,11 +323,25 @@ var theme=lsGet('mmp_theme')==='aero'?'aero':'std',repeatOn=lsGet('mmp_rep')==='
 /* ссылки, обложки, встраивание */
 function ytId(u){var m=u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/);return m?m[1]:''}
 function driveId(u){var m=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/);return m?m[1]:''}
+var COVERS=lsJSON('mmp_covers',{}),COVQ=[],COVBUSY=false,COVPEND={},covTimer=null;
+function coverHost(u){return /^https:\/\/(vimeo\.com|kinescope\.io|t\.me)\//i.test(u||'')}
 function cover(it){
  if(it.img)return it.img;
  var y=ytId(it.u);if(y)return 'https://img.youtube.com/vi/'+y+'/hqdefault.jpg';
  var d=driveId(it.u);if(d)return 'https://drive.google.com/thumbnail?id='+d+'&sz=w640';
+ if(COVERS[it.u])return COVERS[it.u];
+ if(coverHost(it.u))queueCover(it.u);
  return '';
+}
+function queueCover(u){if(COVPEND[u])return;COVPEND[u]=1;COVQ.push(u);runCoverQueue()}
+function runCoverQueue(){
+ if(COVBUSY||!COVQ.length)return;
+ COVBUSY=true;
+ var u=COVQ.shift();
+ fetch('/api/cover?url='+encodeURIComponent(u)).then(function(r){return r.json()}).catch(function(){return {image:''}}).then(function(j){
+  if(j.image){COVERS[u]=j.image;saveJSON('mmp_covers',COVERS);clearTimeout(covTimer);covTimer=setTimeout(render,200)}
+  delete COVPEND[u];COVBUSY=false;runCoverQueue();
+ });
 }
 function embed(u){
  var m;

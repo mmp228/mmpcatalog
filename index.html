@@ -258,6 +258,23 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
 .watch.mini .wt b{font-size:13px}
 .watch.mini .wbtns{justify-content:flex-start}
 .watch.mini .wbar{flex-wrap:wrap}
+
+/* телефон: плеер не выходит за экран */
+.watch,.watch *{box-sizing:border-box}
+.watch{overflow-x:hidden;max-width:100vw}
+.wbar{max-width:100%;width:100%}
+.wt{min-width:0;flex:1 1 auto}
+.wbtns{min-width:0;max-width:100%}
+.wbody{min-width:0;max-width:100vw}
+.wbody>div{min-width:0}
+.wv{max-width:100%}
+@media (max-width:900px){
+ .wbar{flex-wrap:wrap;gap:8px;padding:8px 10px}
+ .wbtns{flex-wrap:wrap;justify-content:flex-start;gap:5px}
+ .wbtns .b2{padding:6px 9px;font-size:11px}
+ #wRep,#wShare,#wMini{display:none}
+ .wt b{white-space:normal;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+}
 </style></head>
 <body>
 <div class="bubbles" aria-hidden="true"><span></span><span></span><span></span><span></span></div>

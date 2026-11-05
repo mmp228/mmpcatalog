@@ -21,6 +21,21 @@ const json = (d, s = 200) =>
 const same = (a, b) =>
   timingSafeEqual(createHash("sha256").update(a).digest(), createHash("sha256").update(b).digest());
 
+function sanitizeHtml(html){
+  var ALLOW={p:1,h1:1,h2:1,h3:1,h4:1,blockquote:1,strong:1,b:1,em:1,i:1,u:1,s:1,ul:1,ol:1,li:1,a:1,img:1,figure:1,figcaption:1,br:1,hr:1,aside:1,mark:1,code:1,pre:1};
+  html=String(html||'')
+   .replace(/<(script|style|iframe|object|embed|video|audio|form|input|button|svg|noscript)\b[\s\S]*?<\/\1\s*>/gi,'')
+   .replace(/<\/?(script|style|iframe|object|embed|video|audio|form|input|button|svg|noscript)\b[^>]*>/gi,'');
+  return html.replace(/<\/?([a-zA-Z][a-zA-Z0-9]*)\b([^>]*)>/g,function(m,tag,attrs){
+    tag=tag.toLowerCase();
+    if(!ALLOW[tag])return '';
+    if(m.charAt(1)==='/')return '</'+tag+'>';
+    if(tag==='a'){var h=(attrs.match(/href\s*=\s*"([^"]*)"/i)||[])[1]||'';return /^https?:\/\//i.test(h)?'<a href="'+h.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener">':''}
+    if(tag==='img'){var s=(attrs.match(/src\s*=\s*"([^"]*)"/i)||[])[1]||'';return /^https:\/\//i.test(s)?'<img src="'+s.replace(/"/g,'&quot;')+'" alt="" loading="lazy">':''}
+    return '<'+tag+'>';
+  });
+}
+
 function cleanCats(list) {
   if (!Array.isArray(list)) throw new Error("Ожидается список категорий");
   if (!list.length) throw new Error("Нужна хотя бы одна категория");
@@ -49,7 +64,8 @@ function cleanItems(list, keys) {
     if (!keys.includes(x.cat)) throw new Error(`Видео ${row}: неизвестная категория`);
     const img = String(x.img ?? "").trim();
     if (img && !/^https?:\/\//i.test(img)) throw new Error(`Видео ${row}: обложка должна быть ссылкой на картинку (https://)`);
-    return { t: t.slice(0, 120), sub: String(x.sub ?? "").trim().slice(0, 160), cat: x.cat, u: u.slice(0, 500), img: img.slice(0, 500) };
+    const body = sanitizeHtml(String(x.body ?? "")).slice(0, 60000);
+    return { t: t.slice(0, 120), sub: String(x.sub ?? "").trim().slice(0, 160), cat: x.cat, u: u.slice(0, 500), img: img.slice(0, 500), body };
   });
 }
 

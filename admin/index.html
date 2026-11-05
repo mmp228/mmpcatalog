@@ -116,7 +116,7 @@ input::placeholder{color:#5d5d57}
   </section>
 
   <section class="box sec">
-   <h2>Видео <span class="acts"><button class="btn sm" id="fetchCov" type="button" title="Найти обложки по ссылкам Vimeo, Kinescope и Telegram">Обложки</button> <button class="btn pri sm" id="addVid" type="button">+ Видео</button></span></h2>
+   <h2>Видео <span class="acts"><button class="btn sm" id="fetchCov" type="button" title="Найти обложки по ссылкам Vimeo, Kinescope и Telegram">Обложки</button> <button class="btn sm" id="fetchArt" type="button" title="Загрузить текст статей из telegra.ph и постов Telegram">Статьи</button> <button class="btn pri sm" id="addVid" type="button">+ Видео</button></span></h2>
    <div class="filters" id="filters"></div>
    <div class="vhead"><span>Название</span><span>Подзаголовок</span><span>Категория</span><span>Ссылка</span><span>Обложка</span><span></span></div>
    <div class="list" id="rows"></div>
@@ -255,6 +255,34 @@ $('fetchCov').onclick=function(){
  },Promise.resolve()).then(function(){
   btn.disabled=false;renderItems();status();
   $('msg').className='ok';$('msg').textContent='Найдено обложек: '+found+' из '+todo.length+'. Не забудьте сохранить.';
+ });
+};
+
+/* статьи из telegra.ph и постов Telegram */
+$('fetchArt').onclick=function(){
+ var todo=[];
+ items.forEach(function(x,i){if(!x.body&&/^https:\/\/(telegra\.ph\/|t\.me\/)/.test(x.u||''))todo.push(i)});
+ if(!todo.length){alert('Нет ссылок на telegra.ph или t.me без текста.');return}
+ if(!confirm('Загрузить текст из '+todo.length+' ссылок? Текст станет статьёй на сайте. Проверьте, нет ли в нём личных данных.'))return;
+ var btn=$('fetchArt');btn.disabled=true;
+ var done=0,n=0;
+ $('msg').className='';$('msg').textContent='Загружаю статьи...';
+ todo.reduce(function(p,i){
+  return p.then(function(){
+   return fetch('/api/article?url='+encodeURIComponent(items[i].u)).then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j}})}).then(function(res){
+    n++;
+    if(res.ok&&res.j.body){
+     items[i].body=res.j.body;
+     if(!items[i].t)items[i].t=res.j.title||'Статья';
+     if(!items[i].img&&res.j.image)items[i].img=res.j.image;
+     done++;touch();
+    }
+    $('msg').textContent='Загружаю статьи: '+n+' из '+todo.length;
+   }).catch(function(){n++});
+  });
+ },Promise.resolve()).then(function(){
+  btn.disabled=false;renderAll();
+  $('msg').className='ok';$('msg').textContent='Загружено статей: '+done+' из '+todo.length+'. Нажмите «Сохранить».';
  });
 };
 

@@ -288,6 +288,28 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
 .plist .pbar{margin:6px -8px 8px;height:4px;border-radius:0}
 .watch.mini .wbar .wt{padding:8px 12px 6px}
 .watch.mini .wbar .wbtns{padding:6px 10px 8px}
+
+/* режим чтения статьи */
+.reader{position:fixed;inset:0;z-index:60;background:var(--bg);overflow:auto;animation:wIn .3s cubic-bezier(.2,.8,.2,1) both}
+.aero .reader{background:radial-gradient(120% 90% at 50% 0%,#c9f1ff 0%,#56b7ec 40%,#1a6bb3 78%,#0a2f5e 100%)}
+.reader[hidden]{display:none!important}
+.rbar{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;background:rgba(14,14,13,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.aero .rbar{background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(255,255,255,.25));backdrop-filter:blur(14px) saturate(150%)}
+.rbtns{display:flex;gap:6px;flex-wrap:wrap}
+.rbody{max-width:720px;margin:0 auto;padding:28px 18px 120px}
+.rbody h1{font-size:clamp(28px,5vw,44px);font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-bottom:18px;color:var(--soft)}
+.rtext{font-size:17px;line-height:1.7;color:var(--ink);display:grid;gap:14px}
+.rtext h2,.rtext h3,.rtext h4{font-size:20px;font-weight:800;margin-top:8px;color:var(--soft)}
+.rtext a{color:var(--acc);text-decoration:underline}
+.rtext img{max-width:100%;height:auto;border-radius:10px;display:block;margin:4px auto}
+.rtext blockquote{border-left:3px solid var(--acc);padding:4px 14px;color:var(--mute);font-style:italic}
+.rtext figure{display:grid;gap:6px}
+.rtext figcaption{font-size:13px;color:var(--mute);text-align:center}
+.rtext ul,.rtext ol{padding-left:22px}
+.rtext code,.rtext pre{font-family:var(--mono);font-size:14px;background:var(--panel2);border-radius:6px;padding:2px 6px}
+.rtext aside{border:1px solid var(--line);border-radius:10px;padding:10px 14px;color:var(--mute)}
+.rtext hr{border:0;border-top:1px solid var(--line)}
+.kind{position:absolute;left:8px;top:8px;z-index:2;font-family:var(--mono);font-size:11px;background:rgba(14,14,13,.75);color:#fff;border-radius:999px;padding:4px 9px}
 </style></head>
 <body>
 <div class="bubbles" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
@@ -357,6 +379,13 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
  </div>
 </div>
 
+<div class="reader" id="rd" hidden role="dialog" aria-modal="true" aria-label="Статья">
+ <div class="rbar">
+  <span class="mono" id="rdCat"></span>
+  <span class="rbtns"><button class="b2" id="rdShare" type="button">Поделиться</button><a class="b2" id="rdOpen" target="_blank" rel="noopener">оригинал ↗</a><button class="b2 pri" id="rdClose" type="button">✕ Закрыть</button></span>
+ </div>
+ <article class="rbody"><h1 id="rdTitle"></h1><div class="rtext" id="rdBody"></div></article>
+</div>
 <div class="sett" id="sett" hidden role="dialog" aria-modal="true" aria-label="Настройки">
  <div class="sbox">
   <div class="sh"><b>Настройки</b><button class="b2" id="setClose" type="button">✕</button></div>
@@ -434,7 +463,7 @@ function isAuto(e){return !!e&&!!(e.yt||e.vim||e.kin||e.t==='v')}
 function isTg(u){return /^https?:\/\/t\.me\//i.test(u||'')}
 function keyOf(it){return it.u+'\n'+it.t}
 function findByKey(k){return ITEMS.find(function(x){return keyOf(x)===k})}
-function plItems(p){return p.keys.map(findByKey).filter(Boolean)}
+function plItems(p){return p.keys.map(findByKey).filter(function(x){return x&&!x.body})}
 function fmt(sec){sec=Math.floor(sec||0);var h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;var p=function(n){return (n<10?'0':'')+n};return h?h+':'+p(m)+':'+p(s):p(m)+':'+p(s)}
 function move(a,i,d){var j=i+d;if(j<0||j>=a.length)return;var t=a[i];a[i]=a[j];a[j]=t}
 
@@ -471,7 +500,7 @@ function card(i){
  var it=ITEMS[i],c=cover(it);
  return '<div class="card" data-i="'+i+'" tabindex="0" role="button" aria-label="'+esc(it.t)+'"><span class="art">'+
   (c?'<img src="'+esc(c)+'" alt="" loading="lazy" onerror="this.remove()">':'')+
-  '<span class="play">▶</span><button class="addbtn" type="button" data-add="'+i+'" title="Добавить в плейлист" aria-label="Добавить в плейлист">＋</button></span>'+
+  '<span class="play">'+(ITEMS[i].body?'≡':'▶')+'</span><button class="addbtn" type="button" data-add="'+i+'" title="Добавить в плейлист" aria-label="Добавить в плейлист">＋</button></span>'+
   '<span class="body"><span class="cat">'+esc(catName(it.cat))+'</span><span class="title">'+esc(it.t)+'</span>'+(it.sub?'<span class="sub">'+esc(it.sub)+'</span>':'')+'</span></div>';
 }
 function render(){
@@ -580,10 +609,10 @@ $('grid').addEventListener('keydown',function(e){
 });
 
 /* просмотр */
-function handleOpen(i){var it=ITEMS[i];if(!it)return;if(isTg(it.u))telegramPrompt(i);else openWatch(it)}
+function handleOpen(i){var it=ITEMS[i];if(!it)return;if(it.body){if(window.openReader)openReader(it);return}if(isTg(it.u))telegramPrompt(i);else openWatch(it)}
 function openWatch(it,list,ctx){
  if(!it)return;
- if(!list){list=ITEMS.filter(function(x){return x.cat===it.cat});ctx='cat:'+it.cat}
+ if(!list){list=ITEMS.filter(function(x){return x.cat===it.cat&&!x.body});ctx='cat:'+it.cat}
  PL=list;PI=PL.indexOf(it);
  if(PI<0){PL=[it];PI=0}
  CTX=ctx;
@@ -601,7 +630,7 @@ function fillSel(){
  $('plSel').value=CTX;
 }
 function ctxList(v){
- if(v.indexOf('cat:')===0){var k=v.slice(4);return ITEMS.filter(function(x){return x.cat===k})}
+ if(v.indexOf('cat:')===0){var k=v.slice(4);return ITEMS.filter(function(x){return x.cat===k&&!x.body})}
  if(v.indexOf('pl:')===0){var p=PLS.find(function(x){return x.id===v.slice(3)});return p?plItems(p):[]}
  return [];
 }
@@ -718,7 +747,7 @@ $('thBtn').onclick=function(){theme=effTheme()==='aero'?'std':'aero';lsSet('mmp_
 
 /* клавиши */
 document.addEventListener('keydown',function(e){
- if(e.key==='Escape'){if(!$('watch').hidden)closeWatch();else if(!$('nvBub').hidden)nvHide();return}
+ if(e.key==='Escape'){if(!$('rd').hidden)closeReader();else if(!$('watch').hidden)closeWatch();else if(!$('nvBub').hidden)nvHide();return}
  if($('watch').hidden||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
  if(e.key==='ArrowRight'||e.key==='n'||e.key==='N'){e.preventDefault();$('wNext').click()}
  else if(e.key==='ArrowLeft'||e.key==='p'||e.key==='P'){e.preventDefault();$('wPrev').click()}
@@ -871,7 +900,7 @@ fetch('/api/items',{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return 
    var hv=h.slice(2);
    history.replaceState(null,'',location.pathname);
    var it=ITEMS.find(function(x){return hashOf(x)===hv});
-   if(it)openWatch(it);
+   if(it)openItem(it);
    else nvShow('Такое видео не найдено в каталоге. Возможно, его уже удалили.',[{label:'Понятно',fn:nvHide}]);
    return;
   }
@@ -919,6 +948,24 @@ fetch('/api/items',{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return 
   nvShow('Места просмотра сброшены.',[{label:'Понятно',fn:nvHide}]);
  };
  setInterval(function(){if(theme==='auto')applyTheme()},60000);
+
+ /* режим чтения статьи */
+ var RD=null;
+ function openReader(it){
+  nvHide();RD=it;
+  $('rdCat').textContent=catName(it.cat);
+  $('rdTitle').textContent=it.t;
+  $('rdBody').innerHTML=it.body;
+  $('rdOpen').href=it.u;
+  $('rd').hidden=false;document.body.style.overflow='hidden';
+  $('rd').scrollTop=0;$('rdClose').focus();
+ }
+ function closeReader(){$('rd').hidden=true;RD=null;document.body.style.overflow=''}
+ window.openReader=openReader;
+ window.closeReader=closeReader;
+ window.openItem=function(it){if(it.body)openReader(it);else openWatch(it)};
+ $('rdClose').onclick=closeReader;
+ $('rdShare').onclick=function(){if(RD)share(RD.t,base()+'#v='+hashOf(RD))};
 
  /* установка как приложение */
  var deferred=null;

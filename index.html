@@ -642,6 +642,9 @@ function kinePlay(id,mv){
   mv.innerHTML='<div id="kpl" style="width:100%;height:100%"></div>';
   window.kFactory.create('kpl',{url:url,behavior:{autoPlay:true}}).then(function(p){
    window.kPlayer=p;
+   /* Kinescope сам возвращает зрителя на прошлое место: после загрузки ставим начало */
+   p.once(p.Events.Loaded,function(){Promise.resolve(p.seekTo(0)).catch(function(){})});
+   Promise.resolve(p.seekTo(0)).catch(function(){});
    p.on(p.Events.Ended,function(){endedNow()});
   }).catch(function(){
    nvShow('Не удалось открыть видео Kinescope. Проверьте, разрешён ли показ этого видео на сайте в настройках Kinescope.',[{label:'Понятно',fn:nvHide}]);

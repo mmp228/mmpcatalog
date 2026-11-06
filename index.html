@@ -310,6 +310,14 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
 .rtext aside{border:1px solid var(--line);border-radius:10px;padding:10px 14px;color:var(--mute)}
 .rtext hr{border:0;border-top:1px solid var(--line)}
 .kind{position:absolute;left:8px;top:8px;z-index:2;font-family:var(--mono);font-size:11px;background:rgba(14,14,13,.75);color:#fff;border-radius:999px;padding:4px 9px}
+
+/* пропорции: плеер не больше разумного размера, список справа шире */
+@media (min-width:901px){
+ .wbody{grid-template-columns:minmax(0,1fr) 380px;max-width:1360px}
+ .wv{width:min(100%,calc((100vh - 190px) * 16 / 9),920px)}
+ .wv.tg{width:min(100%,calc((100vh - 190px) * 16 / 9),920px)}
+ .plist{max-height:calc(100vh - 190px)}
+}
 </style></head>
 <body>
 <div class="bubbles" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
@@ -670,23 +678,39 @@ function playCur(){
  if(!e){window.open(it.u,'_blank','noopener');return}
  var mv=$('wv');
  mv.className='wv'+(e.tg?' tg':'');
- if(e.t==='k'){mv.innerHTML='';kinePlay(e.s,mv)}
- else {
-  mv.innerHTML=e.t==='v'?'<video src="'+esc(e.s)+'" controls autoplay playsinline></video>':'<iframe id="wf" src="'+esc(e.s)+'" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
-  if(e.t==='v'){
-   var vid=mv.querySelector('video');
-   vid.ontimeupdate=function(){if(CUR)savePos(CUR.key,vid.currentTime)};
-   vid.onended=function(){endedNow()};
-  }
-  if(e.yt||e.vim)$('wf').onload=function(){
-   if(e.yt)this.contentWindow.postMessage(JSON.stringify({event:'listening'}),'*');
-   if(e.vim){
-    this.contentWindow.postMessage(JSON.stringify({method:'addEventListener',value:'finish'}),'https://player.vimeo.com');
-    this.contentWindow.postMessage(JSON.stringify({method:'addEventListener',value:'playProgress'}),'https://player.vimeo.com');
-   }
-  };
+ var kind=e.t==='k'?'k':(e.t==='v'?'v':'f'),prev=mv.getAttribute('data-kind');
+ mv.setAttribute('data-kind',kind);
+ /* тот же тип плеера: меняем адрес в том же окне, поэтому полноэкранный режим сохраняется */
+ if(kind==='f'&&prev==='f'&&$('wf')){
+  bindFrame(e);$('wf').src=e.s;
+ } else if(kind==='v'&&prev==='v'&&mv.querySelector('video')){
+  var vv=mv.querySelector('video');bindVideo(vv);vv.src=e.s;
+  if(vv.play)vv.play().catch(function(){});
+ } else if(kind==='k'&&prev==='k'&&window.kPlayer&&typeof window.kPlayer.switchTo==='function'){
+  window.kPlayer.switchTo(e.s,{autoPlay:true,time:0}).catch(function(){kinePlay(e.s,mv)});
+ } else if(kind==='k'){
+  mv.innerHTML='';kinePlay(e.s,mv);
+ } else {
+  mv.innerHTML=kind==='v'?'<video src="'+esc(e.s)+'" controls autoplay playsinline></video>':'<iframe id="wf" src="'+esc(e.s)+'" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
+  if(kind==='v')bindVideo(mv.querySelector('video'));
+  if(kind==='f')bindFrame(e);
  }
  if(!isAuto(e))nvShow('Это видео не переключается само и не запускается автоматически. Нажмите ▶ в плеере. Автопереход работает для YouTube, Vimeo, Kinescope и mp4.',[{label:'Понятно',fn:nvHide}]);
+}
+function bindVideo(v){
+ v.ontimeupdate=function(){if(CUR)savePos(CUR.key,v.currentTime)};
+ v.onended=function(){endedNow()};
+}
+function bindFrame(e){
+ var f=$('wf');if(!f)return;
+ f.onload=function(){
+  if(e.yt)this.contentWindow.postMessage(JSON.stringify({event:'listening'}),'*');
+  if(e.vim)vimeoSubscribe(this.contentWindow);
+ };
+}
+function vimeoSubscribe(win){
+ win.postMessage(JSON.stringify({method:'addEventListener',value:'finish'}),'https://player.vimeo.com');
+ win.postMessage(JSON.stringify({method:'addEventListener',value:'playProgress'}),'https://player.vimeo.com');
 }
 function endedNow(){
  if(!CUR||CUR.ended)return;
@@ -798,6 +822,7 @@ window.addEventListener('message',function(e){
  if(e.origin==='https://player.vimeo.com'){
   try{
    var v=typeof e.data==='string'?JSON.parse(e.data):e.data;if(!v)return;
+   if(v.event==='ready'&&CUR&&CUR.e&&CUR.e.vim){vimeoSubscribe(e.source);return}
    if(v.event==='finish'){endedNow();return}
    if(v.event==='playProgress'&&v.data&&CUR)savePos(CUR.key,v.data.seconds);
   }catch(_){}
